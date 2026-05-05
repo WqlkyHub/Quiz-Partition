@@ -393,8 +393,8 @@ const LEVELS = [
   {id:0,label:'① Note',   desc:'Note simple, clé aléatoire'},
   {id:1,label:'② Accord', desc:'Plusieurs notes empilées'},
   {id:2,label:'③ Clavier',desc:'Portée → touche piano, sans labels'},
-  {id:3,label:'④ Oreille',desc:'Note jouée → identifier au clavier'},
-  {id:4,label:'⑤ Placer', desc:'Placer la note sur la portée'},
+  {id:3,label:'④ Placer', desc:'Placer la note sur la portée'},
+  {id:4,label:'⑤ Oreille',desc:'Note jouée → identifier au clavier'},
 ];
 
 let state = {level:0, score:0, streak:0, total:0, answered:false, currentQ:null};
@@ -405,8 +405,8 @@ const LEVEL_META = [
   { icon:'𝄞', name:'Identifier la note',  desc:'Une note apparaît — dis son nom. Clé de Sol ou Fa au hasard.' },
   { icon:'🎵', name:'Accord',              desc:'2 ou 3 notes empilées à identifier de bas en haut.' },
   { icon:'🎹', name:'Clavier',             desc:'Vois la note sur la portée, trouve la bonne touche. Sans indices.' },
-  { icon:'👂', name:'Oreille',             desc:'Une note est jouée — identifie-la sur le clavier, sans la voir.' },
   { icon:'✏️', name:'Placer la note',      desc:'Un nom de note — place-le au bon endroit sur la portée.' },
+  { icon:'👂', name:'Oreille',             desc:'Une note est jouée — identifie-la sur le clavier, sans la voir.' },
 ];
 
 let bestStreak = 0;
@@ -870,10 +870,12 @@ function makeQ(){
     return {type:'multi',clef:'treble',notes:picked};
   }
   if(lvl===2){ const n=rand(TREBLE); return {type:'piano',note:n}; }
-  if(lvl===3){ const n=rand(TREBLE); return {type:'ear',note:n}; }
-  const clef=Math.random()<0.5?'treble':'bass';
-  const pool=clef==='treble'?TREBLE:BASS;
-  const n=rand(pool); return {type:'place',targetNote:n,clef};
+  if(lvl===3){
+    const clef=Math.random()<0.5?'treble':'bass';
+    const pool=clef==='treble'?TREBLE:BASS;
+    const n=rand(pool); return {type:'place',targetNote:n,clef};
+  }
+  const n=rand(TREBLE); return {type:'ear',note:n};
 }
 
 // ── INTERFACE ─────────────────────────────────────────────────────────────────
@@ -1078,8 +1080,8 @@ function nextQuestion(){
     0:'Quelle est cette note ?',
     1:'Identifie chaque note de bas en haut',
     2:'Trouve la note sur le clavier',
-    3:'Quelle note entends-tu ?',
-    4:'Place la note sur la portée',
+    3:'Place la note sur la portée',
+    4:'Quelle note entends-tu ?',
   };
   document.getElementById('question-label').textContent=labels[state.level]||'';
   buildUI(q);
