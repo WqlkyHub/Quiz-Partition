@@ -25,8 +25,8 @@
     --correct-bg: #d8f3dc;
     --wrong: #9b2226;
     --wrong-bg: #fde8e8;
-    --reveal-bg: #fff3cd;
-    --reveal: #7a5200;
+    --reveal-bg: #d8f3dc;
+    --reveal: #2d6a4f;
   }
   @media (prefers-color-scheme: dark) {
     :root {
@@ -35,7 +35,7 @@
       --accent: #c8945a; --accent2: #e0b878; --line: #3a3028;
       --correct: #52b788; --correct-bg: #1b4332;
       --wrong: #e07070; --wrong-bg: #3b1212;
-      --reveal-bg: #3a2e00; --reveal: #ffd166;
+      --reveal-bg: #1b4332; --reveal: #52b788;
     }
   }
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
@@ -232,6 +232,96 @@ const LEVELS = [
 ];
 
 let state = {level:0, score:0, streak:0, total:0, answered:false, currentQ:null};
+
+// ── AUDIO & VIBRATION ────────────────────────────────────────────────────────
+// Fréquences des notes (tempérament égal, A4=440Hz)
+const NOTE_FREQ = {
+  'Do4':261.63,'Ré4':293.66,'Mi4':329.63,'Fa4':349.23,'Sol4':392.00,'La4':440.00,'Si4':493.88,
+  'Do5':523.25,'Ré5':587.33,'Mi5':659.25,'Fa5':698.46,'Sol5':783.99,'La5':880.00,'Si5':987.77,
+  'Mi2':82.41, 'Fa2':87.31, 'Sol2':98.00, 'La2':110.00,'Si2':123.47,
+  'Do3':130.81,'Ré3':146.83,'Mi3':164.81,'Fa3':174.61,'Sol3':196.00,'La3':220.00,'Si3':246.94,
+  'Do4b':261.63,'Ré4b':293.66, // alias pour clé de fa
+};
+
+let audioCtx = null;
+
+function getAudioCtx(){
+  if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  if(audioCtx.state === 'suspended') audioCtx.resume();
+  return audioCtx;
+}
+
+// Joue une note de piano synthétique (onde sinusoïdale + harmoniques + enveloppe ADSR)
+function playNote(noteName, duration=0.9){
+  try {
+    const ctx = getAudioCtx();
+    const freq = NOTE_FREQ[noteName];
+    if(!freq) return;
+    const now = ctx.currentTime;
+
+    // Harmoniques pour un son de piano crédible
+    const harmonics = [
+      {mult:1,   gain:0.6},
+      {mult:2,   gain:0.25},
+      {mult:3,   gain:0.10},
+      {mult:4,   gain:0.05},
+      {mult:6,   gain:0.02},
+    ];
+
+    const master = ctx.createGain();
+    // Enveloppe : attaque rapide, déclin naturel
+    master.gain.setValueAtTime(0, now);
+    master.gain.linearRampToValueAtTime(0.35, now + 0.008);
+    master.gain.exponentialRampToValueAtTime(0.18, now + 0.12);
+    master.gain.exponentialRampToValueAtTime(0.001, now + duration);
+    master.connect(ctx.destination);
+
+    harmonics.forEach(h => {
+      const osc = ctx.createOscillator();
+      const g = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = freq * h.mult;
+      g.gain.value = h.gain;
+      osc.connect(g); g.connect(master);
+      osc.start(now); osc.stop(now + duration);
+    });
+  } catch(e){}
+}
+
+// Son "juste" : note jouée + ding lumineux
+function soundCorrect(noteName){
+  playNote(noteName, 1.1);
+  vibrate([40]);
+}
+
+// Son "faux" : bruit grave sourd
+function soundWrong(){
+  try {
+    const ctx = getAudioCtx();
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const g = ctx.createGain();
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(120, now);
+    osc.frequency.exponentialRampToValueAtTime(60, now + 0.18);
+    g.gain.setValueAtTime(0.22, now);
+    g.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
+    osc.connect(g); g.connect(ctx.destination);
+    osc.start(now); osc.stop(now + 0.22);
+  } catch(e){}
+  vibrate([80, 60, 80]);
+}
+
+// Son pour jouer la bonne note (feedback pédagogique)
+function soundReveal(noteName){
+  setTimeout(()=>playNote(noteName, 1.2), 350);
+}
+
+function vibrate(pattern){
+  try{ if(navigator.vibrate) navigator.vibrate(pattern); }catch(e){}
+}
+
+
 const rand = arr => arr[Math.floor(Math.random()*arr.length)];
 const dk = () => window.matchMedia('(prefers-color-scheme:dark)').matches;
 
@@ -290,6 +380,19 @@ function renderHStaff(canvas,notes,clef,colors){
     drawHNote(ctx,note.pos,c,x);
   });
 }
+
+function renderHStaffChord(canvas,notes,clef,colors){
+  // Toutes les notes au même x = accord joué d'une main
+  const {ctx,W}=initHCanvas(canvas);
+  ctx.clearRect(0,0,W,H_CANVAS_H);
+  const col=drawHStaffLines(ctx,W); drawHClef(ctx,clef,col);
+  const x = W*0.55; // centré légèrement à droite de la clé
+  notes.forEach((note,i)=>{
+    const c=(colors&&colors[i])?colors[i]:(dk()?'#f0e8d8':'#1a1612');
+    drawHNote(ctx,note.pos,c,x);
+  });
+}
+
 
 // ── PORTÉE VERTICALE (exo 6) ─────────────────────────────────────────────────
 // La portée est dessinée verticalement : la note la plus haute = haut du canvas
@@ -449,18 +552,19 @@ function handleVStaff(e,cv,q,POSITIONS,isTouch){
   const col = correct ? '#52b788' : '#e07070';
 
   if(correct){
-    // Dessiner la note cliquée en vert
     drawVerticalStaff(cv, pos, col, POSITIONS);
-    state.score+=15+state.streak*2; state.streak++; showFeedback('✓ '+streakMsg());
+    state.score+=15+state.streak*2; state.streak++;
+    soundCorrect(found.name);
+    showFeedback('✓ '+streakMsg());
   } else {
-    // Dessiner la note cliquée en rouge, puis après 350ms ajouter la bonne en orange
     drawVerticalStaff(cv, pos, col, POSITIONS);
     setTimeout(()=>{
-      // Redessiner avec la mauvaise en rouge + la bonne en orange
       drawVerticalStaff(cv, pos, col, POSITIONS);
-      drawExtraNoteOnVStaff(cv, q.targetNote.pos, '#f0a500', POSITIONS);
+      drawExtraNoteOnVStaff(cv, q.targetNote.pos, '#52b788', POSITIONS);
     }, 350);
     state.streak=0;
+    soundWrong();
+    soundReveal(q.targetNote.name);
     showFeedback(`${q.targetNote.label} (${q.targetNote.name}) est la bonne position.`);
   }
   updateScore();
@@ -541,10 +645,10 @@ function buildUI(q){
     addNoteGrid(sec,[q.bass.label],  (c,g)=>resolveAnswer(c,[q.bass.label],g,true));
 
   } else if(q.type==='multi'){
-    addHStaff(`${q.notes.length} notes — de bas en haut`,cv=>renderHStaff(cv,q.notes,q.clef,null));
+    addHStaff('Clé de Sol — main droite',cv=>renderHStaffChord(cv,q.notes,q.clef,null));
     const sec=document.getElementById('answer-section');
     q.notes.forEach((note,i)=>{
-      addSubLabel(sec,`Note ${i+1} :`);
+      addSubLabel(sec,`Note ${i+1} (de bas en haut) :`);
       addNoteGrid(sec,[note.label],(c,g)=>resolveAnswer(c,[note.label],g,i===q.notes.length-1));
     });
 
@@ -591,8 +695,20 @@ function resolveAnswer(chosen,correctAnswers,grid,showNext){
     if(b.textContent===chosen) b.classList.add(correct?'correct':'wrong');
     if(!correct&&correctAnswers.includes(b.textContent)) b.classList.add('reveal');
   });
-  if(correct){ if(!state.answered){state.score+=10+state.streak*2;state.streak++;} showFeedback('✓ '+streakMsg()); }
-  else       { state.streak=0; showFeedback('La bonne note : '+correctAnswers.join(', ')); }
+  // Trouver le nom complet de la note pour la jouer
+  const notePool = state.currentQ && state.currentQ.clef==='bass' ? BASS : TREBLE;
+  const noteObj = state.currentQ ? (state.currentQ.notes||[state.currentQ.note]).find(n=>n&&n.label===chosen) : null;
+  const correctNoteObj = notePool.find(n=>correctAnswers.includes(n.label));
+  if(correct){
+    if(!state.answered){state.score+=10+state.streak*2;state.streak++;}
+    soundCorrect(noteObj?noteObj.name:(correctNoteObj?correctNoteObj.name:''));
+    showFeedback('✓ '+streakMsg());
+  } else {
+    state.streak=0;
+    soundWrong();
+    if(correctNoteObj) soundReveal(correctNoteObj.name);
+    showFeedback('La bonne note : '+correctAnswers.join(', '));
+  }
   state.answered=true; updateScore();
   if(showNext){ document.getElementById('next-btn').style.display='inline-block'; scrollToBottom(); }
 }
@@ -657,10 +773,21 @@ function handlePianoClick(clicked,target,svg){
   svg.querySelectorAll('rect[data-label]').forEach(rect=>{
     const lbl=rect.getAttribute('data-label');
     if(lbl===clicked) rect.setAttribute('fill',correct?'#52b788':'#e07070');
-    else if(!correct&&lbl===target) rect.setAttribute('fill','#f0a500');
+    else if(!correct&&lbl===target) rect.setAttribute('fill','#52b788');
   });
-  if(correct){ state.score+=10+state.streak*2; state.streak++; showFeedback('✓ '+streakMsg()); }
-  else       { state.streak=0; showFeedback(`Touche ${target} en orange !`); }
+  // Trouver le nom complet de la note (ex: Sol4) pour la jouer
+  const pianoNoteObj = TREBLE.find(n=>n.label===clicked);
+  const pianoTargetObj = TREBLE.find(n=>n.label===target);
+  if(correct){
+    state.score+=10+state.streak*2; state.streak++;
+    soundCorrect(pianoNoteObj?pianoNoteObj.name:'');
+    showFeedback('✓ '+streakMsg());
+  } else {
+    state.streak=0;
+    soundWrong();
+    if(pianoTargetObj) soundReveal(pianoTargetObj.name);
+    showFeedback(`La bonne touche est en vert !`);
+  }
   updateScore();
   document.getElementById('next-btn').style.display='inline-block';
   scrollToBottom();
