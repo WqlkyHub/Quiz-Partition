@@ -8,7 +8,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>♪ Lire la Portée</title>
+<title>♪ Piano Quiz</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -149,6 +149,133 @@
     align-items: center;
   }
   .vstaff-label-item.is-line { font-weight: 500; color: var(--text2); }
+
+  /* ── PAGE D'ACCUEIL ── */
+  #level-screen {
+    position: fixed; inset: 0; z-index: 99;
+    max-width: 480px; margin: 0 auto;
+    background: var(--bg);
+    display: flex; flex-direction: column;
+    overflow-y: auto; -webkit-overflow-scrolling: touch;
+    transition: opacity 0.35s ease, transform 0.35s ease;
+  }
+  #level-screen.hidden {
+    opacity: 0; transform: translateY(24px); pointer-events: none;
+  }
+  /* Chaque carte de niveau devient un bouton qui lance directement */
+  .level-card-launch { cursor: pointer; }
+
+  #home-screen {
+    position: fixed; inset: 0; z-index: 100;
+    max-width: 480px; margin: 0 auto;
+    background: var(--bg);
+    display: flex; flex-direction: column;
+    overflow-y: auto; -webkit-overflow-scrolling: touch;
+    transition: opacity 0.35s ease, transform 0.35s ease;
+  }
+  #home-screen.hidden {
+    opacity: 0; transform: translateY(24px); pointer-events: none;
+  }
+  .home-hero {
+    background: var(--bg2);
+    border-bottom: 1px solid var(--line);
+    padding: 52px 28px 36px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+  .home-clef {
+    font-size: 88px; line-height: 1;
+    color: var(--accent2);
+    margin-bottom: 12px;
+    display: block;
+    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.12));
+  }
+  .home-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px; font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+  .home-subtitle {
+    font-size: 14px; color: var(--text3);
+    font-style: italic; line-height: 1.5;
+  }
+  .home-body {
+    padding: 24px 20px 36px;
+    display: flex; flex-direction: column; gap: 14px;
+    flex: 1;
+  }
+  .home-section-title {
+    font-size: 11px; font-weight: 600; letter-spacing: 1.2px;
+    text-transform: uppercase; color: var(--text3);
+    margin-bottom: -4px;
+  }
+  .level-cards { display: flex; flex-direction: column; gap: 10px; }
+  .level-card {
+    display: flex; align-items: center; gap: 14px;
+    background: var(--bg2); border: 1px solid var(--line);
+    border-radius: 14px; padding: 14px 16px;
+    cursor: pointer; transition: background 0.15s, transform 0.1s;
+    touch-action: manipulation;
+  }
+  .level-card:active { transform: scale(0.97); background: var(--bg3); }
+  .level-card-icon {
+    font-size: 28px; width: 44px; height: 44px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--bg3); border-radius: 10px;
+    flex-shrink: 0;
+  }
+  .level-card-text { flex: 1; }
+  .level-card-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 15px; font-weight: 700; color: var(--text);
+    margin-bottom: 2px;
+  }
+  .level-card-desc {
+    font-size: 12px; color: var(--text3); font-style: italic; line-height: 1.4;
+  }
+  .level-card-arrow {
+    font-size: 18px; color: var(--text3); flex-shrink: 0;
+  }
+  .home-start-btn {
+    font-family: 'Lora', serif; font-size: 17px; font-weight: 500;
+    color: var(--bg); background: var(--accent);
+    border: none; border-radius: 32px;
+    padding: 16px; width: 100%;
+    cursor: pointer; touch-action: manipulation;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+    transition: transform 0.1s, background 0.15s;
+    margin-top: 4px;
+  }
+  .home-start-btn:active { transform: scale(0.97); }
+  .home-stats {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .home-stat {
+    background: var(--bg2); border: 1px solid var(--line);
+    border-radius: 12px; padding: 12px 14px;
+    text-align: center;
+  }
+  .home-stat-val {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px; font-weight: 700; color: var(--accent2);
+    line-height: 1;
+  }
+  .home-stat-lbl {
+    font-size: 11px; color: var(--text3); margin-top: 3px;
+    font-style: italic;
+  }
+  /* Bouton retour accueil dans header */
+  .home-back-btn {
+    background: none; border: none; cursor: pointer;
+    font-size: 20px; padding: 2px 6px 2px 0;
+    color: var(--text2); touch-action: manipulation;
+    display: none;
+  }
+
   .vstaff-tap-hint {
     font-size: 11px;
     color: var(--text3);
@@ -159,9 +286,49 @@
 </style>
 </head>
 <body>
-<div id="app">
+<!-- ÉCRAN 1 : Accueil -->
+<div id="home-screen">
+  <div class="home-hero">
+    <span class="home-clef">𝄞</span>
+    <div class="home-title">Piano Quiz</div>
+    <div class="home-subtitle">Entraîne ton œil à reconnaître<br>les notes du premier coup</div>
+  </div>
+  <div class="home-body">
+
+    <div class="home-section-title">Mes stats</div>
+    <div class="home-stats">
+      <div class="home-stat">
+        <div class="home-stat-val" id="home-total-score">0</div>
+        <div class="home-stat-lbl">Dernier score</div>
+      </div>
+      <div class="home-stat">
+        <div class="home-stat-val" id="home-best-streak">0</div>
+        <div class="home-stat-lbl">Meilleure série 🔥</div>
+      </div>
+    </div>
+
+    <button class="home-start-btn" id="home-start-btn">
+      Commencer l'entraînement →
+    </button>
+
+  </div>
+</div>
+
+<!-- ÉCRAN 2 : Choix de l'exercice -->
+<div id="level-screen" class="hidden">
+  <div class="home-hero" style="padding: 36px 28px 28px;">
+    <div class="home-title" style="font-size:22px;">Choisis ton exercice</div>
+    <div class="home-subtitle">Sélectionne un niveau pour commencer</div>
+  </div>
+  <div class="home-body" style="padding-top: 16px;">
+    <div class="level-cards" id="home-level-cards"></div>
+  </div>
+</div>
+
+<div id="app" style="display:none;">
   <div class="header">
-    <h1>♪ Lire la Portée</h1>
+    <button class="home-back-btn" id="home-back-btn">←</button>
+    <h1>♪ Piano Quiz</h1>
     <div class="pills">
       <div class="pill">Score <strong id="score-display">0</strong></div>
       <div class="pill">🔥 <strong id="streak-display">0</strong></div>
@@ -223,15 +390,86 @@ const BASS = [
 ];
 const ALL_LABELS = ['Do','Ré','Mi','Fa','Sol','La','Si'];
 const LEVELS = [
-  {id:0,label:'① Sol',    desc:'Note simple, clé de Sol'},
-  {id:1,label:'② Fa',     desc:'Note simple, clé de Fa'},
-  {id:2,label:'③ 2 clés', desc:'Une note dans chaque clé'},
-  {id:3,label:'④ Accord', desc:'Plusieurs notes'},
-  {id:4,label:'⑤ Piano',  desc:'Toucher la bonne touche'},
-  {id:5,label:'⑥ Placer', desc:'Placer la note sur la portée'},
+  {id:0,label:'① Note',   desc:'Note simple, clé aléatoire'},
+  {id:1,label:'② Accord', desc:'Plusieurs notes empilées'},
+  {id:2,label:'③ Clavier',desc:'Portée → touche piano, sans labels'},
+  {id:3,label:'④ Oreille',desc:'Note jouée → identifier au clavier'},
+  {id:4,label:'⑤ Placer', desc:'Placer la note sur la portée'},
 ];
 
 let state = {level:0, score:0, streak:0, total:0, answered:false, currentQ:null};
+
+
+// ── PAGE D'ACCUEIL ────────────────────────────────────────────────────────────
+const LEVEL_META = [
+  { icon:'𝄞', name:'Identifier la note',  desc:'Une note apparaît — dis son nom. Clé de Sol ou Fa au hasard.' },
+  { icon:'🎵', name:'Accord',              desc:'2 ou 3 notes empilées à identifier de bas en haut.' },
+  { icon:'🎹', name:'Clavier',             desc:'Vois la note sur la portée, trouve la bonne touche. Sans indices.' },
+  { icon:'👂', name:'Oreille',             desc:'Une note est jouée — identifie-la sur le clavier, sans la voir.' },
+  { icon:'✏️', name:'Placer la note',      desc:'Un nom de note — place-le au bon endroit sur la portée.' },
+];
+
+let bestStreak = 0;
+let lastScore = 0;
+
+function buildLevelCards(){
+  const container = document.getElementById('home-level-cards');
+  container.innerHTML = '';
+  LEVEL_META.forEach((meta, i) => {
+    const card = document.createElement('div');
+    card.className = 'level-card level-card-launch';
+    card.innerHTML = `
+      <div class="level-card-icon">${meta.icon}</div>
+      <div class="level-card-text">
+        <div class="level-card-name">${meta.name}</div>
+        <div class="level-card-desc">${meta.desc}</div>
+      </div>
+      <div class="level-card-arrow">›</div>
+    `;
+    card.onclick = () => startApp(i);
+    container.appendChild(card);
+  });
+}
+
+function showHome(){
+  // Sauvegarder le score de la session qui vient de se terminer
+  if(state.score > 0) lastScore = state.score;
+  state.score = 0; state.streak = 0; state.total = 0; state.answered = false;
+  document.getElementById('home-total-score').textContent = lastScore;
+  document.getElementById('home-best-streak').textContent = bestStreak;
+  // Afficher écran 1, masquer les autres
+  document.getElementById('home-screen').classList.remove('hidden');
+  document.getElementById('level-screen').classList.add('hidden');
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('home-back-btn').style.display = 'none';
+}
+
+function showLevelScreen(){
+  // Afficher écran 2
+  buildLevelCards();
+  document.getElementById('home-screen').classList.add('hidden');
+  document.getElementById('level-screen').classList.remove('hidden');
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('home-back-btn').style.display = 'none';
+}
+
+function goHome(){
+  showHome();
+}
+
+function startApp(lvl){
+  state.level = lvl;
+  // Masquer les deux écrans d'accueil, afficher le quiz
+  document.getElementById('home-screen').classList.add('hidden');
+  document.getElementById('level-screen').classList.add('hidden');
+  document.getElementById('app').style.display = 'flex';
+  document.getElementById('home-back-btn').style.display = 'block';
+  // Sync l'onglet actif
+  document.querySelectorAll('.level-tab').forEach((t,i) => {
+    t.classList.toggle('active', i === lvl);
+  });
+  nextQuestion();
+}
 
 // ── AUDIO & VIBRATION ────────────────────────────────────────────────────────
 // Fréquences des notes (tempérament égal, A4=440Hz)
@@ -318,7 +556,17 @@ function soundReveal(noteName){
 }
 
 function vibrate(pattern){
-  try{ if(navigator.vibrate) navigator.vibrate(pattern); }catch(e){}
+  // navigator.vibrate non supporté sur iOS — on utilise l'API Haptic via AudioContext
+  try{
+    if(navigator.vibrate){ navigator.vibrate(pattern); return; }
+    // Fallback iOS : silent audio + impact via AudioContext
+    const ctx = getAudioCtx();
+    const buf = ctx.createBuffer(1, 1, 22050);
+    const src = ctx.createBufferSource();
+    src.buffer = buf;
+    src.connect(ctx.destination);
+    src.start(0);
+  }catch(e){}
 }
 
 
@@ -608,16 +856,21 @@ function drawExtraNoteOnVStaff(canvas, pos, color, POSITIONS){
 
 function makeQ(){
   const lvl=state.level;
-  if(lvl===0){ const n=rand(TREBLE); return {type:'single',clef:'treble',notes:[n],answers:[n.label]}; }
-  if(lvl===1){ const n=rand(BASS);   return {type:'single',clef:'bass',  notes:[n],answers:[n.label]}; }
-  if(lvl===2){ const t=rand(TREBLE),b=rand(BASS); return {type:'two_clefs',treble:t,bass:b}; }
-  if(lvl===3){
+  if(lvl===0){
+    // Clé aléatoire : Sol ou Fa
+    const clef=Math.random()<0.5?'treble':'bass';
+    const pool=clef==='treble'?TREBLE:BASS;
+    const n=rand(pool);
+    return {type:'single',clef,notes:[n],answers:[n.label]};
+  }
+  if(lvl===1){
     const count=2+Math.floor(Math.random()*2), picked=[];
     while(picked.length<count){ const n=rand(TREBLE); if(!picked.find(p=>p.name===n.name)) picked.push(n); }
     picked.sort((a,b)=>a.pos-b.pos);
     return {type:'multi',clef:'treble',notes:picked};
   }
-  if(lvl===4){ const n=rand(TREBLE); return {type:'piano',note:n}; }
+  if(lvl===2){ const n=rand(TREBLE); return {type:'piano',note:n}; }
+  if(lvl===3){ const n=rand(TREBLE); return {type:'ear',note:n}; }
   const clef=Math.random()<0.5?'treble':'bass';
   const pool=clef==='treble'?TREBLE:BASS;
   const n=rand(pool); return {type:'place',targetNote:n,clef};
@@ -635,15 +888,6 @@ function buildUI(q){
     addNoteGrid(document.getElementById('answer-section'),q.answers,
       (c,g)=>resolveAnswer(c,q.answers,g,true));
 
-  } else if(q.type==='two_clefs'){
-    addHStaff('Clé de Sol (main droite)',cv=>renderHStaff(cv,[q.treble],'treble',null));
-    addHStaff('Clé de Fa (main gauche)', cv=>renderHStaff(cv,[q.bass],'bass',null));
-    const sec=document.getElementById('answer-section');
-    addSubLabel(sec,'Note clé de Sol :');
-    addNoteGrid(sec,[q.treble.label],(c,g)=>resolveAnswer(c,[q.treble.label],g,false));
-    addSubLabel(sec,'Note clé de Fa :');
-    addNoteGrid(sec,[q.bass.label],  (c,g)=>resolveAnswer(c,[q.bass.label],g,true));
-
   } else if(q.type==='multi'){
     addHStaff('Clé de Sol — main droite',cv=>renderHStaffChord(cv,q.notes,q.clef,null));
     const sec=document.getElementById('answer-section');
@@ -654,7 +898,20 @@ function buildUI(q){
 
   } else if(q.type==='piano'){
     addHStaff('Clé de Sol — main droite',cv=>renderHStaff(cv,[q.note],'treble',null));
-    buildPiano(document.getElementById('answer-section'),q);
+    buildPianoKeys(document.getElementById('answer-section'), q.note.label, false);
+
+  } else if(q.type==='ear'){
+    // Pas de portée — bouton écouter + clavier sans labels
+    const hint=document.createElement('div');
+    hint.style.cssText='text-align:center;margin-bottom:16px;';
+    const playBtn=document.createElement('button');
+    playBtn.textContent='▶ Écouter la note';
+    playBtn.style.cssText='font-family:Lora,serif;font-size:17px;font-weight:500;background:var(--accent);color:var(--bg);border:none;border-radius:32px;padding:14px 36px;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,0.18);touch-action:manipulation;';
+    playBtn.addEventListener('click', ()=>playNote(q.note.name, 1.2));
+    hint.appendChild(playBtn);
+    document.getElementById('staff-container').appendChild(hint);
+    buildPianoKeys(document.getElementById('answer-section'), q.note.label, false);
+    setTimeout(()=>playNote(q.note.name, 1.2), 500);
 
   } else if(q.type==='place'){
     buildVerticalStaff(document.getElementById('staff-container'),q);
@@ -715,15 +972,13 @@ function resolveAnswer(chosen,correctAnswers,grid,showNext){
 
 // ── PIANO ─────────────────────────────────────────────────────────────────────
 
-function buildPiano(container,q){
-  const hint=document.createElement('div'); hint.className='piano-hint';
-  hint.textContent='Touche la bonne note sur le clavier'; container.appendChild(hint);
-
+// showLabels : affiche les noms des notes sous les touches blanches
+function buildPianoKeys(container, target, showLabels){
   const WHITE_KEYS=[
-    {label:'Do',oct:4},{label:'Ré',oct:4},{label:'Mi',oct:4},
-    {label:'Fa',oct:4},{label:'Sol',oct:4},{label:'La',oct:4},{label:'Si',oct:4},
-    {label:'Do',oct:5},{label:'Ré',oct:5},{label:'Mi',oct:5},
-    {label:'Fa',oct:5},{label:'Sol',oct:5},{label:'La',oct:5},{label:'Si',oct:5},
+    {label:'Do'},{label:'Ré'},{label:'Mi'},
+    {label:'Fa'},{label:'Sol'},{label:'La'},{label:'Si'},
+    {label:'Do'},{label:'Ré'},{label:'Mi'},
+    {label:'Fa'},{label:'Sol'},{label:'La'},{label:'Si'},
   ];
   const BLACK_KEYS=[
     {afterIdx:0},{afterIdx:1},{afterIdx:3},{afterIdx:4},{afterIdx:5},
@@ -735,7 +990,6 @@ function buildPiano(container,q){
   const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
   svg.setAttribute('viewBox',`0 0 ${totalW} ${KH}`);
   svg.style.cssText='width:100%;height:auto;display:block;border-radius:8px;';
-  const target=q.note.label;
 
   WHITE_KEYS.forEach((key,i)=>{
     const rect=document.createElementNS('http://www.w3.org/2000/svg','rect');
@@ -745,13 +999,16 @@ function buildPiano(container,q){
     rect.setAttribute('stroke','#bbb'); rect.setAttribute('stroke-width','0.5');
     rect.setAttribute('data-label',key.label); rect.style.cursor='pointer';
     rect.addEventListener('click',()=>handlePianoClick(key.label,target,svg));
+    svg.appendChild(rect);
 
-    const txt=document.createElementNS('http://www.w3.org/2000/svg','text');
-    txt.setAttribute('x',i*KW+KW/2); txt.setAttribute('y',KH-5);
-    txt.setAttribute('text-anchor','middle'); txt.setAttribute('font-size','6.5');
-    txt.setAttribute('fill','#aaa'); txt.setAttribute('pointer-events','none');
-    txt.textContent=key.label;
-    svg.appendChild(rect); svg.appendChild(txt);
+    if(showLabels){
+      const txt=document.createElementNS('http://www.w3.org/2000/svg','text');
+      txt.setAttribute('x',i*KW+KW/2); txt.setAttribute('y',KH-5);
+      txt.setAttribute('text-anchor','middle'); txt.setAttribute('font-size','6.5');
+      txt.setAttribute('fill','#aaa'); txt.setAttribute('pointer-events','none');
+      txt.textContent=key.label;
+      svg.appendChild(txt);
+    }
   });
 
   BLACK_KEYS.forEach(bk=>{
@@ -797,6 +1054,7 @@ function handlePianoClick(clicked,target,svg){
 
 function showFeedback(msg){ document.getElementById('feedback-text').textContent=msg; }
 function streakMsg(){
+  if(state.streak > bestStreak) bestStreak = state.streak;
   if(state.streak>=5) return '🔥 En feu ! +'+(10+state.streak*2)+'pts';
   if(state.streak>=3) return '⭐ Belle série ! +'+(10+state.streak*2)+'pts';
   return 'Correct ! +'+(10+state.streak*2)+'pts';
@@ -817,12 +1075,11 @@ function nextQuestion(){
   document.getElementById('main-scroll').scrollTo({top:0,behavior:'instant'});
   const q=makeQ(); state.currentQ=q;
   const labels={
-    0:'Quelle est cette note ? (Clé de Sol)',
-    1:'Quelle est cette note ? (Clé de Fa)',
-    2:'Identifie les deux notes',
-    3:'Identifie chaque note de bas en haut',
-    4:'Touche la bonne note sur le piano',
-    5:'Place la note sur la portée',
+    0:'Quelle est cette note ?',
+    1:'Identifie chaque note de bas en haut',
+    2:'Trouve la note sur le clavier',
+    3:'Quelle note entends-tu ?',
+    4:'Place la note sur la portée',
   };
   document.getElementById('question-label').textContent=labels[state.level]||'';
   buildUI(q);
@@ -846,7 +1103,9 @@ function buildLevelTabs(){
 }
 
 buildLevelTabs();
-nextQuestion();
+document.getElementById('home-start-btn').addEventListener('click', () => showLevelScreen());
+document.getElementById('home-back-btn').addEventListener('click', () => goHome());
+showHome();
 </script>
 </body>
 </html>
