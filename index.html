@@ -330,10 +330,14 @@ function drawClef(ctx,clef){
     // On cale la baseline sur la ligne du bas de la portée
     // pour que le glyphe s'étende vers le haut et couvre toute la portée
     // 𝄞 : centrage dynamique dans la zone 0..H_LEFT
-    ctx.font='54px serif';
+    // 𝄞 : centré horizontalement, calé verticalement pour couvrir la portée
+    ctx.font='58px serif';
     const gW=ctx.measureText('𝄞').width;
     const xG=Math.max(0,(H_LEFT-gW)/2);
-    ctx.fillText('𝄞', xG, hPY(1) + 8);
+    // La spirale doit être sur Sol4 (pos=2), la queue dépasse en bas
+    // baseline empirique : milieu portée + décalage propre au glyphe
+    const staffMid=(hPY(1)+hPY(5))/2;
+    ctx.fillText('𝄞', xG, staffMid + 28);
   } else {
     // 𝄢 : font 36px, doit s'étendre entre ligne 3 et ligne 5
     // Centre du glyphe aligné sur Fa3 (pos=4, ligne 4)
@@ -390,14 +394,22 @@ function renderHStaffChord(canvas,notes,clef,colors){
   } else {
     ctx.beginPath();ctx.moveTo(x-H_NR+1,hPY(posMax));ctx.lineTo(x-H_NR+1,hPY(posMin)+30);ctx.stroke();
   }
+  // Notes collées : les deux restent à gauche de la hampe
+  // Note normale  : centre = x, son bord droit touche la hampe (x + H_NR = stemX)
+  // Note déplacée : décalée de H_NR*2 vers la droite, son bord gauche touche la hampe
+  const displaced=new Set();
+  for(let i=0;i<notes.length-1;i++){
+    if(Math.abs(notes[i+1].pos-notes[i].pos)===0.5) displaced.add(i+1);
+  }
   notes.forEach((note,i)=>{
     const c=(colors&&colors[i])?colors[i]:'#e8e4dc';
     const y=hPY(note.pos);
+    const nx = displaced.has(i) ? x + H_NR*2 : x;
     const lc='#585854'; ctx.strokeStyle=lc; ctx.lineWidth=0.8;
-    if(note.pos<=0){const ly=hPY(0);ctx.beginPath();ctx.moveTo(x-H_NR-4,ly);ctx.lineTo(x+H_NR+4,ly);ctx.stroke();}
-    if(note.pos>=6){const ly=hPY(6);ctx.beginPath();ctx.moveTo(x-H_NR-4,ly);ctx.lineTo(x+H_NR+4,ly);ctx.stroke();}
+    if(note.pos<=0){const ly=hPY(0);ctx.beginPath();ctx.moveTo(nx-H_NR-4,ly);ctx.lineTo(nx+H_NR+4,ly);ctx.stroke();}
+    if(note.pos>=6){const ly=hPY(6);ctx.beginPath();ctx.moveTo(nx-H_NR-4,ly);ctx.lineTo(nx+H_NR+4,ly);ctx.stroke();}
     ctx.fillStyle=c;
-    ctx.beginPath();ctx.ellipse(x,y,H_NR,H_NR*0.7,-0.2,0,Math.PI*2);ctx.fill();
+    ctx.beginPath();ctx.ellipse(nx,y,H_NR,H_NR*0.7,-0.2,0,Math.PI*2);ctx.fill();
   });
 }
 
