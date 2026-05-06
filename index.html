@@ -9,280 +9,152 @@
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 <title>♪ Piano Quiz</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #faf8f4;
-    --bg2: #f2ede4;
-    --bg3: #e8e0d0;
-    --text: #1a1612;
-    --text2: #5a5248;
-    --text3: #8a7e70;
-    --accent: #7a5c38;
-    --accent2: #b8945a;
-    --line: #c8bfb0;
-    --correct: #2d6a4f;
-    --correct-bg: #d8f3dc;
-    --wrong: #9b2226;
-    --wrong-bg: #fde8e8;
-    --reveal-bg: #d8f3dc;
-    --reveal: #2d6a4f;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #1a1612; --bg2: #231f1a; --bg3: #2e2820;
-      --text: #f0e8d8; --text2: #b0a090; --text3: #7a6e60;
-      --accent: #c8945a; --accent2: #e0b878; --line: #3a3028;
-      --correct: #52b788; --correct-bg: #1b4332;
-      --wrong: #e07070; --wrong-bg: #3b1212;
-      --reveal-bg: #1b4332; --reveal: #52b788;
-    }
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  html, body { height: 100%; background: var(--bg); color: var(--text); font-family: 'Lora', Georgia, serif; overflow: hidden; }
-  #app { display: flex; flex-direction: column; height: 100dvh; max-width: 480px; margin: 0 auto; background: var(--bg); }
+:root {
+  --bg:      #1c1c1e;
+  --bg2:     #242426;
+  --bg3:     #2e2e30;
+  --bg4:     #161618;
+  --text:    #e8e4dc;
+  --text2:   #a09a90;
+  --text3:   #585854;
+  --accent:  #e8e4dc;
+  --line:    #2e2e30;
+  --line2:   #383834;
+  --correct: #52b788;
+  --correct-bg: #1b3a2a;
+  --wrong:   #e07070;
+  --wrong-bg:#3a1c1c;
+  --reveal:  #52b788;
+  --reveal-bg:#1b3a2a;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:"DM Sans",sans-serif;overflow:hidden;}
+#app{display:flex;flex-direction:column;height:100dvh;max-width:480px;margin:0 auto;background:var(--bg);}
 
-  /* HEADER */
-  .header { background: var(--bg2); border-bottom: 1px solid var(--line); padding: 12px 16px 10px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
-  .header h1 { font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 700; color: var(--text); }
-  .pills { display: flex; gap: 8px; }
-  .pill { font-size: 12px; color: var(--text2); background: var(--bg); border: 1px solid var(--line); border-radius: 20px; padding: 3px 10px; font-family: 'Lora', serif; }
-  .pill strong { color: var(--text); }
+/* HEADER */
+.header{
+  background:var(--bg2);border-bottom:1px solid var(--line);
+  padding:13px 16px;display:grid;
+  grid-template-columns:40px 1fr 40px;
+  align-items:center;flex-shrink:0;
+}
+.header h1{font-family:"Syne",sans-serif;font-size:16px;font-weight:700;color:var(--text);text-align:center;letter-spacing:-0.3px;}
+.header-right{display:flex;justify-content:flex-end;align-items:center;gap:6px;}
+.pill{font-family:"DM Sans",sans-serif;font-size:11px;font-weight:400;color:var(--text3);background:var(--bg4);border:1px solid var(--line);border-radius:20px;padding:3px 8px;}
+.pill strong{color:var(--text2);font-weight:500;}
 
-  /* LEVEL TABS */
-  .level-tabs { display: flex; overflow-x: auto; background: var(--bg2); border-bottom: 1px solid var(--line); flex-shrink: 0; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
-  .level-tabs::-webkit-scrollbar { display: none; }
-  .level-tab { padding: 10px 13px; font-family: 'Lora', serif; font-size: 11px; font-weight: 500; color: var(--text3); background: transparent; border: none; border-bottom: 2px solid transparent; cursor: pointer; white-space: nowrap; flex-shrink: 0; transition: color 0.2s; }
-  .level-tab.active { color: var(--text); border-bottom-color: var(--accent); }
+/* TABS */
+.level-tabs{display:flex;overflow-x:auto;background:var(--bg2);border-bottom:1px solid var(--line);flex-shrink:0;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+.level-tabs::-webkit-scrollbar{display:none;}
+.level-tab{padding:10px 13px;font-family:"DM Sans",sans-serif;font-size:11px;font-weight:400;color:var(--text3);background:transparent;border:none;border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:color 0.2s;}
+.level-tab.active{color:var(--text);border-bottom-color:var(--text2);}
 
-  /* PROGRESS */
-  .progress-wrap { height: 2px; background: var(--bg3); flex-shrink: 0; }
-  .progress-fill { height: 100%; background: var(--accent2); transition: width 0.4s ease; }
+/* PROGRESS */
+.progress-wrap{height:1px;background:var(--bg3);flex-shrink:0;}
+.progress-fill{height:100%;background:var(--text2);transition:width 0.4s ease;}
 
-  /* SCROLL AREA */
-  .main { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 18px 16px 20px; display: flex; flex-direction: column; gap: 16px; }
+/* MAIN */
+.main{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:18px 16px 20px;display:flex;flex-direction:column;gap:14px;}
 
-  .question-label { font-size: 13px; color: var(--text3); text-align: center; font-style: italic; line-height: 1.5; }
-  .staff-label { font-size: 13px; color: var(--text2); text-align: center; margin-bottom: 4px; font-weight: 500; }
-  .clef-badge {
-    display: inline-flex; align-items: center; gap: 6px; justify-content: center; width: 100%;
-    font-size: 14px; font-weight: 500; color: var(--accent2);
-    background: var(--bg2); border: 1px solid var(--line); border-radius: 20px;
-    padding: 6px 16px; margin-bottom: 2px;
-  }
-  .clef-symbol { font-size: 20px; line-height: 1; }
-  canvas.staff-canvas { width: 100%; height: auto; display: block; border-radius: 8px; }
+.question-label{font-family:"DM Sans",sans-serif;font-size:12px;font-weight:300;color:var(--text3);text-align:center;letter-spacing:0.3px;}
+canvas.staff-canvas{width:100%;height:auto;display:block;border-radius:10px;background:var(--bg4);border:1px solid var(--line);}
 
-  /* NOTE BUTTONS — plus grands, plus espacés */
-  .answer-section { display: flex; flex-direction: column; gap: 10px; }
-  .sub-label { font-size: 12px; color: var(--text2); font-style: italic; margin-bottom: 2px; }
-  .note-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
-  .note-btn {
-    font-family: 'Lora', serif; font-size: 14px; font-weight: 500;
-    color: var(--text); background: var(--bg2); border: 1px solid var(--line);
-    border-radius: 10px; padding: 0; height: 52px; cursor: pointer;
-    transition: background 0.12s, transform 0.08s; touch-action: manipulation;
-  }
-  .note-btn:active { transform: scale(0.92); background: var(--bg3); }
-  .note-btn.correct { background: var(--correct-bg); border-color: var(--correct); color: var(--correct); font-weight: 600; }
-  .note-btn.wrong   { background: var(--wrong-bg);   border-color: var(--wrong);   color: var(--wrong); }
-  .note-btn.reveal  { background: var(--reveal-bg);  border-color: var(--reveal);  color: var(--reveal); font-weight: 600; }
-  .note-btn:disabled { cursor: default; }
+/* CLEF BADGE */
+.clef-badge{
+  display:flex;align-items:center;gap:8px;justify-content:center;
+  font-family:"DM Sans",sans-serif;font-size:11px;font-weight:400;letter-spacing:0.8px;text-transform:uppercase;color:var(--text3);
+  margin-bottom:4px;
+}
+.clef-symbol{font-size:18px;line-height:1;color:var(--text2);}
 
-  /* FEEDBACK */
-  .feedback-area { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 12px; padding-bottom: 8px; }
-  .feedback-text { font-size: 14px; font-style: italic; color: var(--text2); line-height: 1.4; min-height: 20px; }
-  .next-btn {
-    display: none; font-family: 'Lora', serif; font-size: 15px; font-weight: 500;
-    color: var(--bg); background: var(--accent); border: none; border-radius: 28px;
-    padding: 14px 36px; cursor: pointer; transition: background 0.15s, transform 0.08s; touch-action: manipulation;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.15);
-  }
-  .next-btn:active { transform: scale(0.96); }
+/* NOTE BUTTONS */
+.answer-section{display:flex;flex-direction:column;gap:10px;}
+.sub-label{font-family:"DM Sans",sans-serif;font-size:11px;font-weight:400;letter-spacing:0.5px;text-transform:uppercase;color:var(--text3);margin-bottom:2px;}
+.note-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;}
+.note-btn{
+  font-family:"DM Sans",sans-serif;font-size:13px;font-weight:400;
+  color:var(--text2);background:var(--bg2);border:1px solid var(--line);
+  border-radius:9px;padding:0;height:50px;cursor:pointer;
+  transition:background 0.1s,transform 0.08s;touch-action:manipulation;
+}
+.note-btn:active{transform:scale(0.92);background:var(--bg3);}
+.note-btn.correct{background:var(--correct-bg);border-color:var(--correct);color:var(--correct);font-weight:500;}
+.note-btn.wrong{background:var(--wrong-bg);border-color:var(--wrong);color:var(--wrong);}
+.note-btn.reveal{background:var(--reveal-bg);border-color:var(--reveal);color:var(--reveal);font-weight:500;}
+.note-btn:disabled{cursor:default;}
 
-  /* PIANO */
-  .piano-hint { font-size: 11px; color: var(--text3); text-align: center; font-style: italic; margin-bottom: 6px; }
+/* FEEDBACK */
+.feedback-area{text-align:center;display:flex;flex-direction:column;align-items:center;gap:12px;padding-bottom:8px;}
+.feedback-text{font-family:"DM Sans",sans-serif;font-size:13px;font-weight:300;color:var(--text2);min-height:20px;letter-spacing:0.1px;}
+.next-btn{
+  display:none;font-family:"Syne",sans-serif;font-size:14px;font-weight:600;
+  color:var(--bg);background:var(--text);border:none;border-radius:28px;
+  padding:14px 36px;cursor:pointer;touch-action:manipulation;
+  box-shadow:0 2px 12px rgba(0,0,0,0.4);
+  transition:transform 0.08s,opacity 0.15s;
+}
+.next-btn:active{transform:scale(0.96);}
 
-  /* ── EXO 6 : PORTÉE VERTICALE GRANDE ── */
-  .place-instr { font-size: 15px; color: var(--text); text-align: center; line-height: 1.6; }
-  .place-instr strong { color: var(--accent2); font-size: 22px; }
+/* VERTICAL STAFF */
+.place-instr{font-family:"Syne",sans-serif;font-size:20px;font-weight:700;color:var(--text);text-align:center;line-height:1.3;}
+.place-instr strong{color:var(--text);display:block;font-size:32px;margin-top:4px;}
+.vertical-staff-wrap{display:flex;flex-direction:row;align-items:stretch;width:100%;min-height:420px;}
+.vstaff-canvas-col{flex:1;position:relative;}
+canvas.vstaff{display:block;width:100%;height:100%;cursor:crosshair;border-radius:12px;border:1px solid var(--line);}
+.vstaff-labels{display:none;}
+.vstaff-tap-hint{font-family:"DM Sans",sans-serif;font-size:11px;font-weight:300;color:var(--text3);text-align:center;letter-spacing:0.2px;}
 
-  .vertical-staff-wrap {
-    display: flex;
-    flex-direction: row;
-    align-items: stretch;
-    gap: 0;
-    width: 100%;
-    min-height: 420px;
-  }
+/* HOME SCREENS */
+#level-screen,#home-screen{
+  position:fixed;inset:0;z-index:99;max-width:480px;margin:0 auto;
+  background:var(--bg);display:flex;flex-direction:column;
+  overflow-y:auto;-webkit-overflow-scrolling:touch;
+  transition:opacity 0.3s ease,transform 0.3s ease;
+}
+#home-screen{z-index:100;}
+#level-screen.hidden,#home-screen.hidden{opacity:0;transform:translateY(20px);pointer-events:none;}
 
-  /* Zone clé + portée verticale */
-  .vstaff-canvas-col {
-    flex: 1;
-    position: relative;
-  }
+.home-hero{
+  background:var(--bg2);border-bottom:1px solid var(--line);
+  padding:52px 28px 40px;text-align:center;flex-shrink:0;
+}
+.home-clef{font-size:80px;line-height:1;color:var(--text2);margin-bottom:16px;display:block;}
+.home-title{font-family:"Syne",sans-serif;font-size:28px;font-weight:700;color:var(--text);letter-spacing:-0.5px;margin-bottom:8px;}
+.home-subtitle{font-family:"DM Sans",sans-serif;font-size:14px;font-weight:300;color:var(--text3);line-height:1.6;letter-spacing:0.1px;}
+.home-body{padding:24px 20px 36px;display:flex;flex-direction:column;gap:14px;flex:1;}
+.home-section-title{font-family:"DM Sans",sans-serif;font-size:10px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);}
 
-  canvas.vstaff {
-    display: block;
-    width: 100%;
-    height: 100%;
-    cursor: crosshair;
-    border-radius: 10px;
-  }
+.home-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.home-stat{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:14px;text-align:center;}
+.home-stat-val{font-family:"Syne",sans-serif;font-size:26px;font-weight:700;color:var(--text);line-height:1;}
+.home-stat-lbl{font-family:"DM Sans",sans-serif;font-size:11px;font-weight:300;color:var(--text3);margin-top:4px;letter-spacing:0.2px;}
 
-  /* Labels des notes à droite */
-  .vstaff-labels {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 0 0 0 10px;
-    width: 44px;
-    flex-shrink: 0;
-  }
-  .vstaff-label-item {
-    font-family: 'Lora', serif;
-    font-size: 12px;
-    color: var(--text3);
-    text-align: left;
-    line-height: 1;
-    display: flex;
-    align-items: center;
-  }
-  .vstaff-label-item.is-line { font-weight: 500; color: var(--text2); }
+.home-start-btn{
+  font-family:"Syne",sans-serif;font-size:15px;font-weight:700;
+  color:var(--bg);background:var(--text);border:none;border-radius:28px;
+  padding:16px;width:100%;cursor:pointer;touch-action:manipulation;
+  box-shadow:0 4px 20px rgba(0,0,0,0.5);transition:transform 0.1s;
+}
+.home-start-btn:active{transform:scale(0.97);}
 
-  /* ── PAGE D'ACCUEIL ── */
-  #level-screen {
-    position: fixed; inset: 0; z-index: 99;
-    max-width: 480px; margin: 0 auto;
-    background: var(--bg);
-    display: flex; flex-direction: column;
-    overflow-y: auto; -webkit-overflow-scrolling: touch;
-    transition: opacity 0.35s ease, transform 0.35s ease;
-  }
-  #level-screen.hidden {
-    opacity: 0; transform: translateY(24px); pointer-events: none;
-  }
-  /* Chaque carte de niveau devient un bouton qui lance directement */
-  .level-card-launch { cursor: pointer; }
+.level-cards{display:flex;flex-direction:column;gap:8px;}
+.level-card{
+  display:flex;align-items:center;gap:14px;
+  background:var(--bg2);border:1px solid var(--line);
+  border-radius:14px;padding:14px 16px;
+  cursor:pointer;transition:background 0.12s,transform 0.08s;touch-action:manipulation;
+}
+.level-card:active{transform:scale(0.98);background:var(--bg3);}
+.level-card-icon{font-size:24px;width:42px;height:42px;display:flex;align-items:center;justify-content:center;background:var(--bg3);border-radius:10px;flex-shrink:0;}
+.level-card-text{flex:1;}
+.level-card-name{font-family:"Syne",sans-serif;font-size:14px;font-weight:600;color:var(--text);margin-bottom:3px;}
+.level-card-desc{font-family:"DM Sans",sans-serif;font-size:12px;font-weight:300;color:var(--text3);line-height:1.4;}
+.level-card-arrow{font-size:16px;color:var(--text3);flex-shrink:0;}
 
-  #home-screen {
-    position: fixed; inset: 0; z-index: 100;
-    max-width: 480px; margin: 0 auto;
-    background: var(--bg);
-    display: flex; flex-direction: column;
-    overflow-y: auto; -webkit-overflow-scrolling: touch;
-    transition: opacity 0.35s ease, transform 0.35s ease;
-  }
-  #home-screen.hidden {
-    opacity: 0; transform: translateY(24px); pointer-events: none;
-  }
-  .home-hero {
-    background: var(--bg2);
-    border-bottom: 1px solid var(--line);
-    padding: 52px 28px 36px;
-    text-align: center;
-    flex-shrink: 0;
-  }
-  .home-clef {
-    font-size: 88px; line-height: 1;
-    color: var(--accent2);
-    margin-bottom: 12px;
-    display: block;
-    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.12));
-  }
-  .home-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 28px; font-weight: 700;
-    color: var(--text);
-    letter-spacing: -0.5px;
-    line-height: 1.2;
-    margin-bottom: 8px;
-  }
-  .home-subtitle {
-    font-size: 14px; color: var(--text3);
-    font-style: italic; line-height: 1.5;
-  }
-  .home-body {
-    padding: 24px 20px 36px;
-    display: flex; flex-direction: column; gap: 14px;
-    flex: 1;
-  }
-  .home-section-title {
-    font-size: 11px; font-weight: 600; letter-spacing: 1.2px;
-    text-transform: uppercase; color: var(--text3);
-    margin-bottom: -4px;
-  }
-  .level-cards { display: flex; flex-direction: column; gap: 10px; }
-  .level-card {
-    display: flex; align-items: center; gap: 14px;
-    background: var(--bg2); border: 1px solid var(--line);
-    border-radius: 14px; padding: 14px 16px;
-    cursor: pointer; transition: background 0.15s, transform 0.1s;
-    touch-action: manipulation;
-  }
-  .level-card:active { transform: scale(0.97); background: var(--bg3); }
-  .level-card-icon {
-    font-size: 28px; width: 44px; height: 44px;
-    display: flex; align-items: center; justify-content: center;
-    background: var(--bg3); border-radius: 10px;
-    flex-shrink: 0;
-  }
-  .level-card-text { flex: 1; }
-  .level-card-name {
-    font-family: 'Playfair Display', serif;
-    font-size: 15px; font-weight: 700; color: var(--text);
-    margin-bottom: 2px;
-  }
-  .level-card-desc {
-    font-size: 12px; color: var(--text3); font-style: italic; line-height: 1.4;
-  }
-  .level-card-arrow {
-    font-size: 18px; color: var(--text3); flex-shrink: 0;
-  }
-  .home-start-btn {
-    font-family: 'Lora', serif; font-size: 17px; font-weight: 500;
-    color: var(--bg); background: var(--accent);
-    border: none; border-radius: 32px;
-    padding: 16px; width: 100%;
-    cursor: pointer; touch-action: manipulation;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.18);
-    transition: transform 0.1s, background 0.15s;
-    margin-top: 4px;
-  }
-  .home-start-btn:active { transform: scale(0.97); }
-  .home-stats {
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: 10px;
-  }
-  .home-stat {
-    background: var(--bg2); border: 1px solid var(--line);
-    border-radius: 12px; padding: 12px 14px;
-    text-align: center;
-  }
-  .home-stat-val {
-    font-family: 'Playfair Display', serif;
-    font-size: 24px; font-weight: 700; color: var(--accent2);
-    line-height: 1;
-  }
-  .home-stat-lbl {
-    font-size: 11px; color: var(--text3); margin-top: 3px;
-    font-style: italic;
-  }
-  /* Bouton retour accueil dans header */
-  .home-back-btn {
-    background: none; border: none; cursor: pointer;
-    font-size: 20px; padding: 2px 6px 2px 0;
-    color: var(--text2); touch-action: manipulation;
-    display: none;
-  }
-
-  .vstaff-tap-hint {
-    font-size: 11px;
-    color: var(--text3);
-    text-align: center;
-    font-style: italic;
-    margin-top: -4px;
-  }
+.home-back-btn{background:none;border:none;cursor:pointer;font-size:18px;padding:2px 0;color:var(--text2);touch-action:manipulation;display:none;justify-self:start;}
+.piano-hint{font-family:"DM Sans",sans-serif;font-size:11px;font-weight:300;color:var(--text3);text-align:center;margin-bottom:8px;letter-spacing:0.2px;}
 </style>
 </head>
 <body>
@@ -291,10 +163,9 @@
   <div class="home-hero">
     <span class="home-clef">𝄞</span>
     <div class="home-title">Piano Quiz</div>
-    <div class="home-subtitle">Entraîne ton œil à reconnaître<br>les notes du premier coup</div>
+    <div class="home-subtitle">Entraîne ton oreille et ton œil<br>à reconnaître les notes</div>
   </div>
   <div class="home-body">
-
     <div class="home-section-title">Mes stats</div>
     <div class="home-stats">
       <div class="home-stat">
@@ -306,21 +177,17 @@
         <div class="home-stat-lbl">Meilleure série 🔥</div>
       </div>
     </div>
-
-    <button class="home-start-btn" id="home-start-btn">
-      Commencer l'entraînement →
-    </button>
-
+    <button class="home-start-btn" id="home-start-btn">Commencer →</button>
   </div>
 </div>
 
-<!-- ÉCRAN 2 : Choix de l'exercice -->
+<!-- ÉCRAN 2 : Choix exercice -->
 <div id="level-screen" class="hidden">
-  <div class="home-hero" style="padding: 36px 28px 28px;">
+  <div class="home-hero" style="padding:36px 28px 28px;">
     <div class="home-title" style="font-size:22px;">Choisis ton exercice</div>
     <div class="home-subtitle">Sélectionne un niveau pour commencer</div>
   </div>
-  <div class="home-body" style="padding-top: 16px;">
+  <div class="home-body" style="padding-top:16px;">
     <div class="level-cards" id="home-level-cards"></div>
   </div>
 </div>
@@ -328,9 +195,9 @@
 <div id="app" style="display:none;">
   <div class="header">
     <button class="home-back-btn" id="home-back-btn">←</button>
-    <h1>♪ Piano Quiz</h1>
-    <div class="pills">
-      <div class="pill">Score <strong id="score-display">0</strong></div>
+    <h1>Piano Quiz</h1>
+    <div class="header-right">
+      <div class="pill"><strong id="score-display">0</strong></div>
       <div class="pill">🔥 <strong id="streak-display">0</strong></div>
     </div>
   </div>
@@ -348,755 +215,333 @@
 </div>
 
 <script>
-// ── DONNÉES ──────────────────────────────────────────────────────────────────
-// Portée horizontale : pos = position de bas en haut
-// pos 1..5 = lignes, 1.5..4.5 = espaces, 0 = ledger basse, 6 = ledger haute
-//
-// CLÉ DE SOL : Do4=0, Ré4=0.5, Mi4=1, Fa4=1.5, Sol4=2, La4=2.5,
-//              Si4=3, Do5=3.5, Ré5=4, Mi5=4.5, Fa5=5, Sol5=5.5, La5=6
-//
-// CLÉ DE FA  : Mi2=0, Fa2=0.5, Sol2=1, La2=1.5, Si2=2, Do3=2.5,
-//              Ré3=3, Mi3=3.5, Fa3=4, Sol3=4.5, La3=5, Si3=5.5, Do4=6
-
-const TREBLE = [
-  {name:'Do4', label:'Do',  pos:0  },
-  {name:'Ré4', label:'Ré',  pos:0.5},
-  {name:'Mi4', label:'Mi',  pos:1  },
-  {name:'Fa4', label:'Fa',  pos:1.5},
-  {name:'Sol4',label:'Sol', pos:2  },
-  {name:'La4', label:'La',  pos:2.5},
-  {name:'Si4', label:'Si',  pos:3  },
-  {name:'Do5', label:'Do',  pos:3.5},
-  {name:'Ré5', label:'Ré',  pos:4  },
-  {name:'Mi5', label:'Mi',  pos:4.5},
-  {name:'Fa5', label:'Fa',  pos:5  },
-  {name:'Sol5',label:'Sol', pos:5.5},
-  {name:'La5', label:'La',  pos:6  },
+const TREBLE=[
+  {name:'Do4',label:'Do',pos:0},{name:'Ré4',label:'Ré',pos:0.5},
+  {name:'Mi4',label:'Mi',pos:1},{name:'Fa4',label:'Fa',pos:1.5},
+  {name:'Sol4',label:'Sol',pos:2},{name:'La4',label:'La',pos:2.5},
+  {name:'Si4',label:'Si',pos:3},{name:'Do5',label:'Do',pos:3.5},
+  {name:'Ré5',label:'Ré',pos:4},{name:'Mi5',label:'Mi',pos:4.5},
+  {name:'Fa5',label:'Fa',pos:5},{name:'Sol5',label:'Sol',pos:5.5},
+  {name:'La5',label:'La',pos:6},
 ];
-const BASS = [
-  {name:'Mi2', label:'Mi',  pos:0  },
-  {name:'Fa2', label:'Fa',  pos:0.5},
-  {name:'Sol2',label:'Sol', pos:1  },
-  {name:'La2', label:'La',  pos:1.5},
-  {name:'Si2', label:'Si',  pos:2  },
-  {name:'Do3', label:'Do',  pos:2.5},
-  {name:'Ré3', label:'Ré',  pos:3  },
-  {name:'Mi3', label:'Mi',  pos:3.5},
-  {name:'Fa3', label:'Fa',  pos:4  },
-  {name:'Sol3',label:'Sol', pos:4.5},
-  {name:'La3', label:'La',  pos:5  },
-  {name:'Si3', label:'Si',  pos:5.5},
-  {name:'Do4', label:'Do',  pos:6  },
+const BASS=[
+  {name:'Mi2',label:'Mi',pos:0},{name:'Fa2',label:'Fa',pos:0.5},
+  {name:'Sol2',label:'Sol',pos:1},{name:'La2',label:'La',pos:1.5},
+  {name:'Si2',label:'Si',pos:2},{name:'Do3',label:'Do',pos:2.5},
+  {name:'Ré3',label:'Ré',pos:3},{name:'Mi3',label:'Mi',pos:3.5},
+  {name:'Fa3',label:'Fa',pos:4},{name:'Sol3',label:'Sol',pos:4.5},
+  {name:'La3',label:'La',pos:5},{name:'Si3',label:'Si',pos:5.5},
+  {name:'Do4',label:'Do',pos:6},
 ];
-const ALL_LABELS = ['Do','Ré','Mi','Fa','Sol','La','Si'];
-const LEVELS = [
-  {id:0,label:'① Note',   desc:'Note simple, clé aléatoire'},
-  {id:1,label:'② Accord', desc:'Plusieurs notes empilées'},
-  {id:2,label:'③ Clavier',desc:'Portée → touche piano, sans labels'},
-  {id:3,label:'④ Placer', desc:'Placer la note sur la portée'},
-  {id:4,label:'⑤ Oreille',desc:'Note jouée → identifier au clavier'},
+const ALL_LABELS=['Do','Ré','Mi','Fa','Sol','La','Si'];
+const LEVELS=[
+  {id:0,label:'① Note',desc:'Note simple, clé aléatoire'},
+  {id:1,label:'② Accord',desc:'Plusieurs notes empilées'},
+  {id:2,label:'③ Clavier',desc:'Portée → touche piano'},
+  {id:3,label:'④ Placer',desc:'Placer la note sur la portée'},
+  {id:4,label:'⑤ Oreille',desc:'Note jouée → identifier'},
+];
+const LEVEL_META=[
+  {icon:'𝄞',name:'Identifier la note',desc:'Une note apparaît — dis son nom. Clé de Sol ou Fa au hasard.'},
+  {icon:'🎵',name:'Accord',desc:'2 ou 3 notes empilées à identifier de bas en haut.'},
+  {icon:'🎹',name:'Clavier',desc:'Vois la note sur la portée, trouve la bonne touche. Sans indices.'},
+  {icon:'✏️',name:'Placer la note',desc:'Un nom de note — place-le au bon endroit sur la portée.'},
+  {icon:'👂',name:'Oreille',desc:'Une note est jouée — identifie-la sur le clavier, sans la voir.'},
 ];
 
-let state = {level:0, score:0, streak:0, total:0, answered:false, currentQ:null};
+let state={level:0,score:0,streak:0,total:0,answered:false,currentQ:null};
+let bestStreak=0, lastScore=0;
+const rand=arr=>arr[Math.floor(Math.random()*arr.length)];
 
-
-// ── PAGE D'ACCUEIL ────────────────────────────────────────────────────────────
-const LEVEL_META = [
-  { icon:'𝄞', name:'Identifier la note',  desc:'Une note apparaît — dis son nom. Clé de Sol ou Fa au hasard.' },
-  { icon:'🎵', name:'Accord',              desc:'2 ou 3 notes empilées à identifier de bas en haut.' },
-  { icon:'🎹', name:'Clavier',             desc:'Vois la note sur la portée, trouve la bonne touche. Sans indices.' },
-  { icon:'✏️', name:'Placer la note',      desc:'Un nom de note — place-le au bon endroit sur la portée.' },
-  { icon:'👂', name:'Oreille',             desc:'Une note est jouée — identifie-la sur le clavier, sans la voir.' },
-];
-
-let bestStreak = 0;
-let lastScore = 0;
-
-function buildLevelCards(){
-  const container = document.getElementById('home-level-cards');
-  container.innerHTML = '';
-  LEVEL_META.forEach((meta, i) => {
-    const card = document.createElement('div');
-    card.className = 'level-card level-card-launch';
-    card.innerHTML = `
-      <div class="level-card-icon">${meta.icon}</div>
-      <div class="level-card-text">
-        <div class="level-card-name">${meta.name}</div>
-        <div class="level-card-desc">${meta.desc}</div>
-      </div>
-      <div class="level-card-arrow">›</div>
-    `;
-    card.onclick = () => startApp(i);
-    container.appendChild(card);
-  });
-}
-
-function showHome(){
-  // Sauvegarder le score de la session qui vient de se terminer
-  if(state.score > 0) lastScore = state.score;
-  state.score = 0; state.streak = 0; state.total = 0; state.answered = false;
-  document.getElementById('home-total-score').textContent = lastScore;
-  document.getElementById('home-best-streak').textContent = bestStreak;
-  // Afficher écran 1, masquer les autres
-  document.getElementById('home-screen').classList.remove('hidden');
-  document.getElementById('level-screen').classList.add('hidden');
-  document.getElementById('app').style.display = 'none';
-  document.getElementById('home-back-btn').style.display = 'none';
-}
-
-function showLevelScreen(){
-  // Afficher écran 2
-  buildLevelCards();
-  document.getElementById('home-screen').classList.add('hidden');
-  document.getElementById('level-screen').classList.remove('hidden');
-  document.getElementById('app').style.display = 'none';
-  document.getElementById('home-back-btn').style.display = 'none';
-}
-
-function goHome(){
-  showHome();
-}
-
-function startApp(lvl){
-  state.level = lvl;
-  // Masquer les deux écrans d'accueil, afficher le quiz
-  document.getElementById('home-screen').classList.add('hidden');
-  document.getElementById('level-screen').classList.add('hidden');
-  document.getElementById('app').style.display = 'flex';
-  document.getElementById('home-back-btn').style.display = 'block';
-  // Sync l'onglet actif
-  document.querySelectorAll('.level-tab').forEach((t,i) => {
-    t.classList.toggle('active', i === lvl);
-  });
-  nextQuestion();
-}
-
-// ── AUDIO & VIBRATION ────────────────────────────────────────────────────────
-// Fréquences des notes (tempérament égal, A4=440Hz)
-const NOTE_FREQ = {
+// ── AUDIO ────────────────────────────────────────────────────────────────────
+const NOTE_FREQ={
   'Do4':261.63,'Ré4':293.66,'Mi4':329.63,'Fa4':349.23,'Sol4':392.00,'La4':440.00,'Si4':493.88,
   'Do5':523.25,'Ré5':587.33,'Mi5':659.25,'Fa5':698.46,'Sol5':783.99,'La5':880.00,'Si5':987.77,
-  'Mi2':82.41, 'Fa2':87.31, 'Sol2':98.00, 'La2':110.00,'Si2':123.47,
+  'Mi2':82.41,'Fa2':87.31,'Sol2':98.00,'La2':110.00,'Si2':123.47,
   'Do3':130.81,'Ré3':146.83,'Mi3':164.81,'Fa3':174.61,'Sol3':196.00,'La3':220.00,'Si3':246.94,
-  'Do4b':261.63,'Ré4b':293.66, // alias pour clé de fa
 };
-
-let audioCtx = null;
-
+let audioCtx=null;
 function getAudioCtx(){
-  if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  if(audioCtx.state === 'suspended') audioCtx.resume();
+  if(!audioCtx) audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+  if(audioCtx.state==='suspended') audioCtx.resume();
   return audioCtx;
 }
-
-// Joue une note de piano synthétique (onde sinusoïdale + harmoniques + enveloppe ADSR)
-function playNote(noteName, duration=0.9){
-  try {
-    const ctx = getAudioCtx();
-    const freq = NOTE_FREQ[noteName];
-    if(!freq) return;
-    const now = ctx.currentTime;
-
-    // Harmoniques pour un son de piano crédible
-    const harmonics = [
-      {mult:1,   gain:0.6},
-      {mult:2,   gain:0.25},
-      {mult:3,   gain:0.10},
-      {mult:4,   gain:0.05},
-      {mult:6,   gain:0.02},
-    ];
-
-    const master = ctx.createGain();
-    // Enveloppe : attaque rapide, déclin naturel
-    master.gain.setValueAtTime(0, now);
-    master.gain.linearRampToValueAtTime(0.35, now + 0.008);
-    master.gain.exponentialRampToValueAtTime(0.18, now + 0.12);
-    master.gain.exponentialRampToValueAtTime(0.001, now + duration);
-    master.connect(ctx.destination);
-
-    harmonics.forEach(h => {
-      const osc = ctx.createOscillator();
-      const g = ctx.createGain();
-      osc.type = 'sine';
-      osc.frequency.value = freq * h.mult;
-      g.gain.value = h.gain;
-      osc.connect(g); g.connect(master);
-      osc.start(now); osc.stop(now + duration);
-    });
-  } catch(e){}
-}
-
-// Son "juste" : note jouée + ding lumineux
-function soundCorrect(noteName){
-  playNote(noteName, 1.1);
-  vibrate([40]);
-}
-
-// Son "faux" : bruit grave sourd
-function soundWrong(){
-  try {
-    const ctx = getAudioCtx();
-    const now = ctx.currentTime;
-    const osc = ctx.createOscillator();
-    const g = ctx.createGain();
-    osc.type = 'sawtooth';
-    osc.frequency.setValueAtTime(120, now);
-    osc.frequency.exponentialRampToValueAtTime(60, now + 0.18);
-    g.gain.setValueAtTime(0.22, now);
-    g.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
-    osc.connect(g); g.connect(ctx.destination);
-    osc.start(now); osc.stop(now + 0.22);
-  } catch(e){}
-  vibrate([80, 60, 80]);
-}
-
-// Son pour jouer la bonne note (feedback pédagogique)
-function soundReveal(noteName){
-  setTimeout(()=>playNote(noteName, 1.2), 350);
-}
-
-function vibrate(pattern){
-  // navigator.vibrate non supporté sur iOS — on utilise l'API Haptic via AudioContext
+function playNote(noteName,duration=0.9){
   try{
-    if(navigator.vibrate){ navigator.vibrate(pattern); return; }
-    // Fallback iOS : silent audio + impact via AudioContext
-    const ctx = getAudioCtx();
-    const buf = ctx.createBuffer(1, 1, 22050);
-    const src = ctx.createBufferSource();
-    src.buffer = buf;
-    src.connect(ctx.destination);
-    src.start(0);
+    const ctx=getAudioCtx(); const freq=NOTE_FREQ[noteName]; if(!freq) return;
+    const now=ctx.currentTime;
+    const harmonics=[{mult:1,gain:0.6},{mult:2,gain:0.25},{mult:3,gain:0.10},{mult:4,gain:0.05},{mult:6,gain:0.02}];
+    const master=ctx.createGain();
+    master.gain.setValueAtTime(0,now);
+    master.gain.linearRampToValueAtTime(0.35,now+0.008);
+    master.gain.exponentialRampToValueAtTime(0.18,now+0.12);
+    master.gain.exponentialRampToValueAtTime(0.001,now+duration);
+    master.connect(ctx.destination);
+    harmonics.forEach(h=>{
+      const osc=ctx.createOscillator(); const g=ctx.createGain();
+      osc.type='sine'; osc.frequency.value=freq*h.mult; g.gain.value=h.gain;
+      osc.connect(g); g.connect(master); osc.start(now); osc.stop(now+duration);
+    });
   }catch(e){}
 }
+function soundCorrect(n){playNote(n,1.1);}
+function soundWrong(){
+  try{
+    const ctx=getAudioCtx(); const now=ctx.currentTime;
+    const osc=ctx.createOscillator(); const g=ctx.createGain();
+    osc.type='sawtooth';
+    osc.frequency.setValueAtTime(120,now);
+    osc.frequency.exponentialRampToValueAtTime(60,now+0.18);
+    g.gain.setValueAtTime(0.22,now); g.gain.exponentialRampToValueAtTime(0.001,now+0.22);
+    osc.connect(g); g.connect(ctx.destination); osc.start(now); osc.stop(now+0.22);
+  }catch(e){}
+}
+function soundReveal(n){setTimeout(()=>playNote(n,1.2),350);}
 
+// ── DESSIN PORTÉE HORIZONTALE ────────────────────────────────────────────────
+const H_TOP=32, H_SP=12, H_NR=6, H_LEFT=56, H_CH=130, DPR=window.devicePixelRatio||1;
+function hPY(pos){return H_TOP+(5-pos)*H_SP;}
 
-const rand = arr => arr[Math.floor(Math.random()*arr.length)];
-const dk = () => window.matchMedia('(prefers-color-scheme:dark)').matches;
-
-// ── PORTÉE HORIZONTALE ───────────────────────────────────────────────────────
-const H_STAFF_TOP=28, H_LINE_SP=11, H_NOTE_R=6, H_STAFF_LEFT=58, H_CANVAS_H=108;
-const DPR = window.devicePixelRatio || 1;
-
-function hPosToY(pos){ return H_STAFF_TOP + (5-pos)*H_LINE_SP; }
-
-function initHCanvas(canvas){
-  const W = canvas.parentElement.clientWidth || 340;
-  canvas.width = W*DPR; canvas.height = H_CANVAS_H*DPR;
-  canvas.style.height = H_CANVAS_H+'px';
-  const ctx = canvas.getContext('2d'); ctx.scale(DPR,DPR);
+function initHC(canvas){
+  // Remonter jusqu'au premier parent avec une largeur réelle
+  let el=canvas.parentElement;
+  while(el && el.clientWidth===0) el=el.parentElement;
+  const W=(el?el.clientWidth:0)||document.getElementById('main-scroll').clientWidth||340;
+  canvas.width=W*DPR; canvas.height=H_CH*DPR;
+  canvas.style.height=H_CH+'px';
+  const ctx=canvas.getContext('2d'); ctx.scale(DPR,DPR);
   return {ctx,W};
 }
 
-function drawHStaffLines(ctx,W){
-  const col = dk()?'#c0b0a0':'#4a3f35';
-  ctx.strokeStyle=col; ctx.lineWidth=0.8;
-  [1,2,3,4,5].forEach(p=>{ const y=hPosToY(p); ctx.beginPath(); ctx.moveTo(H_STAFF_LEFT,y); ctx.lineTo(W-12,y); ctx.stroke(); });
-  ctx.lineWidth=1.4;
-  ctx.beginPath(); ctx.moveTo(H_STAFF_LEFT,hPosToY(5)); ctx.lineTo(H_STAFF_LEFT,hPosToY(1)); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(W-12,hPosToY(5)); ctx.lineTo(W-12,hPosToY(1)); ctx.stroke();
+function drawLines(ctx,W){
+  const col='#383834';
+  ctx.strokeStyle=col; ctx.lineWidth=0.5;
+  [1,2,3,4,5].forEach(p=>{const y=hPY(p);ctx.beginPath();ctx.moveTo(H_LEFT,y);ctx.lineTo(W-12,y);ctx.stroke();});
+  ctx.lineWidth=1.2;
+  ctx.beginPath();ctx.moveTo(H_LEFT,hPY(5));ctx.lineTo(H_LEFT,hPY(1));ctx.stroke();
+  ctx.beginPath();ctx.moveTo(W-12,hPY(5));ctx.lineTo(W-12,hPY(1));ctx.stroke();
   return col;
 }
 
-function drawHClef(ctx,clef,col){
-  ctx.fillStyle=col;
+function drawClef(ctx,clef){
+  ctx.fillStyle='#e8e4dc';
   if(clef==='treble'){
-    // On dessine le glyphe puis on l'aligne :
-    // La spirale de 𝄞 doit être centrée sur Sol4 (pos=2)
-    // On utilise la taille connue du glyphe : à 60px, la spirale est à ~38% du bas du glyphe
-    const fs=60;
-    ctx.font=fs+'px serif';
-    // posToY(2) = y de Sol4, posToY(5) = y ligne haute, posToY(1) = y ligne basse
-    // La clé de sol s'étend de la ligne 1 à un peu au-dessus de la ligne 5
-    // On cale le bas du glyphe (baseline) sur la ligne 1 + marge
-    const baseline = hPosToY(1) + 4;
-    ctx.fillText('𝄞', 2, baseline);
+    // 𝄞 : font 56px, queue en bas, spirale sur Sol4 (pos=2)
+    // On cale la baseline sur la ligne du bas de la portée
+    // pour que le glyphe s'étende vers le haut et couvre toute la portée
+    // 𝄞 : centrage dynamique dans la zone 0..H_LEFT
+    ctx.font='54px serif';
+    const gW=ctx.measureText('𝄞').width;
+    const xG=Math.max(0,(H_LEFT-gW)/2);
+    ctx.fillText('𝄞', xG, hPY(1) + 8);
   } else {
-    // La clé de fa : les deux points encadrent la ligne 4 (Fa3, pos=4)
-    // On cale la clé pour que les points soient sur pos=4 et pos=4.5
-    // À 40px, les points du 𝄢 sont à ~25% sous le haut du glyphe
-    const fs=40;
-    ctx.font=fs+'px serif';
-    // baseline = posToY(4) + ~60% de la hauteur du glyphe
-    const baseline = hPosToY(3) + 4;
-    ctx.fillText('𝄢', 4, baseline);
+    // 𝄢 : font 36px, doit s'étendre entre ligne 3 et ligne 5
+    // Centre du glyphe aligné sur Fa3 (pos=4, ligne 4)
+    // 𝄢 : centrage dynamique comme 𝄞
+    ctx.font='34px serif';
+    const gWF=ctx.measureText('𝄢').width;
+    const xF=Math.max(0,(H_LEFT-gWF)/2);
+    ctx.fillText('𝄢', xF, hPY(3.5) + 8);
   }
 }
 
-function drawHNote(ctx,pos,color,x){
-  const y=hPosToY(pos);
-  const lc=dk()?'#888':'#5a4a35';
-  ctx.strokeStyle=lc; ctx.lineWidth=1;
-  if(pos<=0){ const ly=hPosToY(0); ctx.beginPath(); ctx.moveTo(x-H_NOTE_R-4,ly); ctx.lineTo(x+H_NOTE_R+4,ly); ctx.stroke(); }
-  if(pos>=6){ const ly=hPosToY(6); ctx.beginPath(); ctx.moveTo(x-H_NOTE_R-4,ly); ctx.lineTo(x+H_NOTE_R+4,ly); ctx.stroke(); }
+function drawNote(ctx,pos,color,x){
+  const y=hPY(pos);
+  const lc='#585854'; ctx.strokeStyle=lc; ctx.lineWidth=0.8;
+  if(pos<=0){const ly=hPY(0);ctx.beginPath();ctx.moveTo(x-H_NR-4,ly);ctx.lineTo(x+H_NR+4,ly);ctx.stroke();}
+  if(pos>=6){const ly=hPY(6);ctx.beginPath();ctx.moveTo(x-H_NR-4,ly);ctx.lineTo(x+H_NR+4,ly);ctx.stroke();}
+  // Hampe verticale parfaitement droite
   const up=pos<3.5;
   ctx.strokeStyle=color; ctx.lineWidth=1.4;
-  if(up){ ctx.beginPath(); ctx.moveTo(x+H_NOTE_R-1,y); ctx.lineTo(x+H_NOTE_R-1,y-30); ctx.stroke(); }
-  else  { ctx.beginPath(); ctx.moveTo(x-H_NOTE_R+1,y); ctx.lineTo(x-H_NOTE_R+1,y+30); ctx.stroke(); }
+  if(up){ctx.beginPath();ctx.moveTo(x+H_NR-1,y);ctx.lineTo(x+H_NR-1,y-30);ctx.stroke();}
+  else  {ctx.beginPath();ctx.moveTo(x-H_NR+1,y);ctx.lineTo(x-H_NR+1,y+30);ctx.stroke();}
+  // Tête légèrement ovale, rotation douce
   ctx.fillStyle=color;
-  ctx.beginPath(); ctx.ellipse(x,y,H_NOTE_R,H_NOTE_R*0.72,-0.25,0,Math.PI*2); ctx.fill();
+  ctx.beginPath();ctx.ellipse(x,y,H_NR,H_NR*0.7,-0.2,0,Math.PI*2);ctx.fill();
 }
 
 function renderHStaff(canvas,notes,clef,colors){
-  const {ctx,W}=initHCanvas(canvas);
-  ctx.clearRect(0,0,W,H_CANVAS_H);
-  const col=drawHStaffLines(ctx,W); drawHClef(ctx,clef,col);
-  const aStart=115, aEnd=W-24;
+  const {ctx,W}=initHC(canvas);
+  ctx.clearRect(0,0,W,H_CH);
+  ctx.fillStyle='#161618'; ctx.fillRect(0,0,W,H_CH);
+  drawLines(ctx,W); drawClef(ctx,clef);
+  const aS=H_LEFT+12, aE=W-16;
   notes.forEach((note,i)=>{
-    const x=notes.length===1?aStart+(aEnd-aStart)/2:aStart+i*(aEnd-aStart)/Math.max(notes.length-1,1);
-    const c=(colors&&colors[i])?colors[i]:(dk()?'#f0e8d8':'#1a1612');
-    drawHNote(ctx,note.pos,c,x);
+    const x=notes.length===1?aS+(aE-aS)/2:aS+i*(aE-aS)/Math.max(notes.length-1,1);
+    const c=(colors&&colors[i])?colors[i]:'#e8e4dc';
+    drawNote(ctx,note.pos,c,x);
   });
 }
 
 function renderHStaffChord(canvas,notes,clef,colors){
-  const {ctx,W}=initHCanvas(canvas);
-  ctx.clearRect(0,0,W,H_CANVAS_H);
-  const col=drawHStaffLines(ctx,W); drawHClef(ctx,clef,col);
-  const x = W*0.55;
-  // Direction : basée sur la note médiane
+  const {ctx,W}=initHC(canvas);
+  ctx.clearRect(0,0,W,H_CH);
+  ctx.fillStyle='#161618'; ctx.fillRect(0,0,W,H_CH);
+  drawLines(ctx,W); drawClef(ctx,clef);
+  const aS2=H_LEFT+12, aE2=W-16; const x=aS2+(aE2-aS2)/2;
   const medPos=notes[Math.floor(notes.length/2)].pos;
   const forceUp=medPos<=3.5;
-  // Trouver la note la plus haute et la plus basse pour la hampe unique
   const posMin=Math.min(...notes.map(n=>n.pos));
   const posMax=Math.max(...notes.map(n=>n.pos));
-  const stemLen=30;
-  // Dessiner la hampe unique en premier (derrière les têtes)
-  const lc=dk()?'#f0e8d8':'#1a1612';
-  ctx.strokeStyle=lc; ctx.lineWidth=1.4;
+  // Hampe unique parfaitement verticale
+  ctx.strokeStyle='#e8e4dc'; ctx.lineWidth=1.4;
   if(forceUp){
-    const yBottom=hPosToY(posMin);
-    const yTop=hPosToY(posMax)-stemLen;
-    ctx.beginPath(); ctx.moveTo(x+H_NOTE_R-1,yBottom); ctx.lineTo(x+H_NOTE_R-1,yTop); ctx.stroke();
+    ctx.beginPath();ctx.moveTo(x+H_NR-1,hPY(posMin));ctx.lineTo(x+H_NR-1,hPY(posMax)-30);ctx.stroke();
   } else {
-    const yTop=hPosToY(posMax);
-    const yBottom=hPosToY(posMin)+stemLen;
-    ctx.beginPath(); ctx.moveTo(x-H_NOTE_R+1,yTop); ctx.lineTo(x-H_NOTE_R+1,yBottom); ctx.stroke();
+    ctx.beginPath();ctx.moveTo(x-H_NR+1,hPY(posMax));ctx.lineTo(x-H_NR+1,hPY(posMin)+30);ctx.stroke();
   }
-  // Dessiner les têtes de notes (sans hampe individuelle)
   notes.forEach((note,i)=>{
-    const c=(colors&&colors[i])?colors[i]:(dk()?'#f0e8d8':'#1a1612');
-    const y=hPosToY(note.pos);
-    // Lignes de reposée si besoin
-    const lc2=dk()?'#888':'#5a4a35';
-    ctx.strokeStyle=lc2; ctx.lineWidth=1;
-    if(note.pos<=0){ const ly=hPosToY(0); ctx.beginPath(); ctx.moveTo(x-H_NOTE_R-4,ly); ctx.lineTo(x+H_NOTE_R+4,ly); ctx.stroke(); }
-    if(note.pos>=6){ const ly=hPosToY(6); ctx.beginPath(); ctx.moveTo(x-H_NOTE_R-4,ly); ctx.lineTo(x+H_NOTE_R+4,ly); ctx.stroke(); }
-    // Tête
+    const c=(colors&&colors[i])?colors[i]:'#e8e4dc';
+    const y=hPY(note.pos);
+    const lc='#585854'; ctx.strokeStyle=lc; ctx.lineWidth=0.8;
+    if(note.pos<=0){const ly=hPY(0);ctx.beginPath();ctx.moveTo(x-H_NR-4,ly);ctx.lineTo(x+H_NR+4,ly);ctx.stroke();}
+    if(note.pos>=6){const ly=hPY(6);ctx.beginPath();ctx.moveTo(x-H_NR-4,ly);ctx.lineTo(x+H_NR+4,ly);ctx.stroke();}
     ctx.fillStyle=c;
-    ctx.beginPath(); ctx.ellipse(x,y,H_NOTE_R,H_NOTE_R*0.72,-0.25,0,Math.PI*2); ctx.fill();
+    ctx.beginPath();ctx.ellipse(x,y,H_NR,H_NR*0.7,-0.2,0,Math.PI*2);ctx.fill();
   });
 }
 
-// Comme drawHNote mais avec direction de hampe forcée
-function drawHNoteForced(ctx,pos,color,x,forceUp){
-  const y=hPosToY(pos);
-  const lc=dk()?'#888':'#5a4a35';
-  ctx.strokeStyle=lc; ctx.lineWidth=1;
-  if(pos<=0){ const ly=hPosToY(0); ctx.beginPath(); ctx.moveTo(x-H_NOTE_R-4,ly); ctx.lineTo(x+H_NOTE_R+4,ly); ctx.stroke(); }
-  if(pos>=6){ const ly=hPosToY(6); ctx.beginPath(); ctx.moveTo(x-H_NOTE_R-4,ly); ctx.lineTo(x+H_NOTE_R+4,ly); ctx.stroke(); }
-  ctx.strokeStyle=color; ctx.lineWidth=1.4;
-  if(forceUp){ ctx.beginPath(); ctx.moveTo(x+H_NOTE_R-1,y); ctx.lineTo(x+H_NOTE_R-1,y-30); ctx.stroke(); }
-  else        { ctx.beginPath(); ctx.moveTo(x-H_NOTE_R+1,y); ctx.lineTo(x-H_NOTE_R+1,y+30); ctx.stroke(); }
-  ctx.fillStyle=color;
-  ctx.beginPath(); ctx.ellipse(x,y,H_NOTE_R,H_NOTE_R*0.72,-0.25,0,Math.PI*2); ctx.fill();
-}
-
-
-// ── PORTÉE VERTICALE (exo 6) ─────────────────────────────────────────────────
-// La portée est dessinée verticalement : la note la plus haute = haut du canvas
-// On a 13 positions (pos 0 à 6 par pas de 0.5) = 13 slots
-// On mappe pos → Y dans le canvas vertical
-
-function buildVerticalStaff(container, q){
-  // Badge de clé bien visible
-  const badge = document.createElement('div'); badge.className='clef-badge';
+// ── PORTÉE VERTICALE ─────────────────────────────────────────────────────────
+function buildVerticalStaff(container,q){
   const isTreble=q.clef!=='bass';
-  badge.innerHTML=`<span class="clef-symbol">${isTreble?'𝄞':'𝄢'}</span> ${isTreble?'Clé de Sol — main droite':'Clé de Fa — main gauche'}`;
+  const badge=document.createElement('div'); badge.className='clef-badge';
+  badge.innerHTML=`<span class="clef-symbol">${isTreble?'𝄞':'𝄢'}</span>${isTreble?'Clé de Sol — main droite':'Clé de Fa — main gauche'}`;
   container.appendChild(badge);
-
-  // Instruction
-  const instr = document.createElement('div'); instr.className='place-instr';
-  instr.innerHTML=`Touche la position de<br><strong>${q.targetNote.label}</strong>`;
+  const instr=document.createElement('div'); instr.className='place-instr';
+  instr.innerHTML=`Touche<strong>${q.targetNote.label}</strong>`;
   container.appendChild(instr);
-
-  const hint = document.createElement('div'); hint.className='vstaff-tap-hint';
-  hint.textContent='↓ Touche la bonne ligne ou espace';
+  const hint=document.createElement('div'); hint.className='vstaff-tap-hint';
+  hint.textContent='Touche la bonne ligne ou espace';
   container.appendChild(hint);
-
-  const wrap = document.createElement('div'); wrap.className='vertical-staff-wrap';
-
-  // Canvas
-  const canvasCol = document.createElement('div'); canvasCol.className='vstaff-canvas-col';
-  const cv = document.createElement('canvas'); cv.className='vstaff'; cv.id='vstaff-cv';
-  canvasCol.appendChild(cv);
-  wrap.appendChild(canvasCol);
-
-  // Labels à droite
-  const labelsCol = document.createElement('div'); labelsCol.className='vstaff-labels';
-
-  // On liste les positions de haut (pos=6) à bas (pos=0) par pas de 0.5
-  // pour que l'ordre corresponde à l'affichage vertical (haut=6, bas=0)
-  const POSITIONS = [];
-  for(let p=6; p>=0; p-=0.5) POSITIONS.push(p);
-
-  // Pas de labels — ils donneraient les réponses !
-  // On garde juste la colonne vide pour l'espacement
-  wrap.appendChild(labelsCol);
+  const wrap=document.createElement('div'); wrap.className='vertical-staff-wrap';
+  const col=document.createElement('div'); col.className='vstaff-canvas-col';
+  const cv=document.createElement('canvas'); cv.className='vstaff'; cv.id='vstaff-cv';
+  col.appendChild(cv); wrap.appendChild(col);
   container.appendChild(wrap);
-
-  // Dessin après layout
+  const POSITIONS=[];
+  for(let p=6;p>=0;p-=0.5) POSITIONS.push(p);
   setTimeout(()=>{
-    drawVerticalStaff(cv, null, null, POSITIONS);
-    cv.addEventListener('touchstart', e=>{e.preventDefault(); handleVStaffTouch(e,cv,q,POSITIONS);},{passive:false});
-    cv.addEventListener('click',      e=>handleVStaffClick(e,cv,q,POSITIONS));
+    drawVStaff(cv,null,null,POSITIONS);
+    cv.addEventListener('touchstart',e=>{e.preventDefault();handleVStaff(e,cv,q,POSITIONS,true);},{passive:false});
+    cv.addEventListener('click',e=>handleVStaff(e,cv,q,POSITIONS,false));
   },40);
 }
 
-function drawVerticalStaff(canvas, selectedPos, selectedColor, POSITIONS){
-  const W = canvas.parentElement.clientWidth || 200;
-  const H = canvas.parentElement.clientHeight || 420;
-  canvas.width = W*DPR; canvas.height = H*DPR;
-  canvas.style.width  = W+'px';
-  canvas.style.height = H+'px';
-  const ctx = canvas.getContext('2d');
-  ctx.scale(DPR,DPR);
+function drawVStaff(canvas,selectedPos,selectedColor,POSITIONS){
+  const W=canvas.parentElement.clientWidth||200;
+  const H=canvas.parentElement.clientHeight||420;
+  canvas.width=W*DPR; canvas.height=H*DPR;
+  canvas.style.width=W+'px'; canvas.style.height=H+'px';
+  const ctx=canvas.getContext('2d'); ctx.scale(DPR,DPR);
   ctx.clearRect(0,0,W,H);
-
-  const n = POSITIONS.length; // 13
-  const slotH = H / n;
-  const lineCol = dk()?'#c0b0a0':'#4a3f35';
-  const bgCol   = dk()?'#231f1a':'#faf8f4';
-
-  // Fond
-  ctx.fillStyle = bgCol; ctx.fillRect(0,0,W,H);
-
-  // Lignes horizontales pour les 5 lignes de portée (pos 1,2,3,4,5)
-  // pos 6 = top → index 0 ; pos 0 = bottom → index 12
-  // index = (6 - pos) / 0.5 = (6-pos)*2
-  function posToIndex(pos){ return Math.round((6-pos)*2); }
-  function indexToY(idx){ return (idx+0.5)*slotH; } // centre du slot
-
-  ctx.strokeStyle = lineCol; ctx.lineWidth = 1;
-  [1,2,3,4,5].forEach(lp=>{
-    const idx = posToIndex(lp);
-    const y = indexToY(idx);
-    ctx.beginPath(); ctx.moveTo(12,y); ctx.lineTo(W-8,y); ctx.stroke();
-  });
-
-  // Lignes de reposée pos 0 et pos 6
-  ctx.lineWidth = 0.8;
-  [0,6].forEach(lp=>{
-    const idx = posToIndex(lp);
-    const y = indexToY(idx);
-    ctx.setLineDash([4,3]);
-    ctx.beginPath(); ctx.moveTo(W*0.2,y); ctx.lineTo(W*0.8,y); ctx.stroke();
-    ctx.setLineDash([]);
-  });
-
-  // Barre verticale centrale
-  ctx.strokeStyle = lineCol; ctx.lineWidth = 1.5;
-  const cx = W/2;
-  const y1 = indexToY(posToIndex(5));
-  const y5 = indexToY(posToIndex(1));
-  ctx.beginPath(); ctx.moveTo(cx,y1); ctx.lineTo(cx,y5); ctx.stroke();
-
-  // Zones cliquables : petits rectangles en alternance pour guider l'œil
-  POSITIONS.forEach((pos,idx)=>{
-    const y = indexToY(idx);
-    const isLine = (pos%1===0);
-    if(isLine && pos>=1 && pos<=5){
-      ctx.fillStyle = dk()?'rgba(255,255,255,0.03)':'rgba(0,0,0,0.02)';
-      ctx.fillRect(0, y-slotH/2, W, slotH);
-    }
-  });
-
-  // Note sélectionnée
-  if(selectedPos !== null){
-    const idx = posToIndex(selectedPos);
-    const y = indexToY(idx);
-    const r = Math.min(slotH*0.38, W*0.18);
-    // ledger si besoin
+  ctx.fillStyle='#161618'; ctx.fillRect(0,0,W,H);
+  const n=POSITIONS.length, slotH=H/n, cx=W/2;
+  function pI(pos){return Math.round((6-pos)*2);}
+  function iY(idx){return(idx+0.5)*slotH;}
+  ctx.strokeStyle='#383834'; ctx.lineWidth=0.8;
+  [1,2,3,4,5].forEach(lp=>{const y=iY(pI(lp));ctx.beginPath();ctx.moveTo(12,y);ctx.lineTo(W-8,y);ctx.stroke();});
+  ctx.lineWidth=0.5; ctx.setLineDash([4,3]);
+  [0,6].forEach(lp=>{const y=iY(pI(lp));ctx.beginPath();ctx.moveTo(W*0.2,y);ctx.lineTo(W*0.8,y);ctx.stroke();});
+  ctx.setLineDash([]);
+  ctx.strokeStyle='#383834'; ctx.lineWidth=1.2;
+  ctx.beginPath();ctx.moveTo(cx,iY(pI(5)));ctx.lineTo(cx,iY(pI(1)));ctx.stroke();
+  if(selectedPos!==null){
+    const idx=pI(selectedPos), y=iY(idx), r=Math.min(slotH*0.38,W*0.18);
     if(selectedPos===0||selectedPos===6){
-      ctx.strokeStyle = lineCol; ctx.lineWidth=1;
-      ctx.beginPath(); ctx.moveTo(cx-r-6,y); ctx.lineTo(cx+r+6,y); ctx.stroke();
+      ctx.strokeStyle='#383834'; ctx.lineWidth=0.8;
+      ctx.beginPath();ctx.moveTo(cx-r-6,y);ctx.lineTo(cx+r+6,y);ctx.stroke();
     }
-    ctx.fillStyle = selectedColor||'#1a1612';
-    ctx.beginPath(); ctx.ellipse(cx, y, r, r*0.72, -0.2, 0, Math.PI*2); ctx.fill();
-    // queue
-    const up = selectedPos < 3.5;
-    ctx.strokeStyle = selectedColor||'#1a1612'; ctx.lineWidth=1.8;
-    const stemLen = slotH*2.5;
-    if(up){ ctx.beginPath(); ctx.moveTo(cx+r-1,y); ctx.lineTo(cx+r-1,y-stemLen); ctx.stroke(); }
-    else  { ctx.beginPath(); ctx.moveTo(cx-r+1,y); ctx.lineTo(cx-r+1,y+stemLen); ctx.stroke(); }
+    ctx.fillStyle=selectedColor||'#e8e4dc';
+    ctx.beginPath();ctx.ellipse(cx,y,r,r*0.7,-0.2,0,Math.PI*2);ctx.fill();
+    // Hampe verticale droite
+    const up=selectedPos<3.5, stemLen=slotH*2.5;
+    ctx.strokeStyle=selectedColor||'#e8e4dc'; ctx.lineWidth=1.8;
+    if(up){ctx.beginPath();ctx.moveTo(cx+r-1,y);ctx.lineTo(cx+r-1,y-stemLen);ctx.stroke();}
+    else  {ctx.beginPath();ctx.moveTo(cx-r+1,y);ctx.lineTo(cx-r+1,y+stemLen);ctx.stroke();}
   }
-
-  // Pas de labels — ils donneraient les réponses !
 }
 
-function getVStaffPos(e, canvas, POSITIONS, isTouch){
-  const rect = canvas.getBoundingClientRect();
-  const clientY = isTouch ? e.touches[0].clientY : e.clientY;
-  const relY = (clientY - rect.top);
-  const H = rect.height;
-  const n = POSITIONS.length;
-  const slotH = H/n;
-  const idx = Math.floor(relY/slotH);
-  const clampedIdx = Math.max(0,Math.min(n-1,idx));
-  return {pos: POSITIONS[clampedIdx], idx: clampedIdx};
+function drawExtraVNote(canvas,pos,color,POSITIONS){
+  const W=canvas.width/DPR, H=canvas.height/DPR;
+  const ctx=canvas.getContext('2d');
+  const n=POSITIONS.length, slotH=H/n, cx=W/2;
+  function pI(p){return Math.round((6-p)*2);}
+  function iY(idx){return(idx+0.5)*slotH;}
+  const idx=pI(pos), y=iY(idx), r=Math.min(slotH*0.38,W*0.18);
+  ctx.save(); ctx.setTransform(DPR,0,0,DPR,0,0);
+  if(pos===0||pos===6){
+    ctx.strokeStyle='#383834'; ctx.lineWidth=0.8;
+    ctx.beginPath();ctx.moveTo(cx-r-6,y);ctx.lineTo(cx+r+6,y);ctx.stroke();
+  }
+  ctx.fillStyle=color;
+  ctx.beginPath();ctx.ellipse(cx,y,r,r*0.7,-0.2,0,Math.PI*2);ctx.fill();
+  const up=pos<3.5, stemLen=slotH*2.5;
+  ctx.strokeStyle=color; ctx.lineWidth=1.8;
+  if(up){ctx.beginPath();ctx.moveTo(cx+r-1,y);ctx.lineTo(cx+r-1,y-stemLen);ctx.stroke();}
+  else  {ctx.beginPath();ctx.moveTo(cx-r+1,y);ctx.lineTo(cx-r+1,y+stemLen);ctx.stroke();}
+  ctx.restore();
 }
-
-function handleVStaffTouch(e,cv,q,POSITIONS){ handleVStaff(e,cv,q,POSITIONS,true); }
-function handleVStaffClick(e,cv,q,POSITIONS){ handleVStaff(e,cv,q,POSITIONS,false); }
 
 function handleVStaff(e,cv,q,POSITIONS,isTouch){
   if(state.answered) return;
-  const {pos} = getVStaffPos(e,cv,POSITIONS,isTouch);
-  const notePool = q.clef==='bass' ? BASS : TREBLE;
-  const found = notePool.find(n=>n.pos===pos);
-  if(!found){ showFeedback('Touche une ligne ou un espace !'); return; }
-
+  const rect=cv.getBoundingClientRect();
+  const clientY=isTouch?e.touches[0].clientY:e.clientY;
+  const relY=clientY-rect.top, slotH=rect.height/POSITIONS.length;
+  const idx=Math.max(0,Math.min(POSITIONS.length-1,Math.floor(relY/slotH)));
+  const pos=POSITIONS[idx];
+  const notePool=q.clef==='bass'?BASS:TREBLE;
+  const found=notePool.find(n=>n.pos===pos);
+  if(!found){showFeedback('Touche une ligne ou un espace !');return;}
   state.answered=true; state.total++;
-  const correct = found.label === q.targetNote.label;
-  const col = correct ? '#52b788' : '#e07070';
-
+  const correct=found.label===q.targetNote.label;
+  const col=correct?'#52b788':'#e07070';
+  drawVStaff(cv,pos,col,POSITIONS);
   if(correct){
-    drawVerticalStaff(cv, pos, col, POSITIONS);
     state.score+=15+state.streak*2; state.streak++;
-    soundCorrect(found.name);
-    showFeedback('✓ '+streakMsg());
+    soundCorrect(found.name); showFeedback('✓ '+streakMsg());
   } else {
-    drawVerticalStaff(cv, pos, col, POSITIONS);
-    setTimeout(()=>{
-      drawVerticalStaff(cv, pos, col, POSITIONS);
-      drawExtraNoteOnVStaff(cv, q.targetNote.pos, '#52b788', POSITIONS);
-    }, 350);
-    state.streak=0;
-    soundWrong();
-    soundReveal(q.targetNote.name);
-    showFeedback(`${q.targetNote.label} (${q.targetNote.name}) est la bonne position.`);
+    setTimeout(()=>{drawVStaff(cv,pos,col,POSITIONS);drawExtraVNote(cv,q.targetNote.pos,'#52b788',POSITIONS);},350);
+    state.streak=0; soundWrong(); soundReveal(q.targetNote.name);
+    showFeedback(q.targetNote.label+' ('+q.targetNote.name+') est la bonne position.');
   }
   updateScore();
   document.getElementById('next-btn').style.display='inline-block';
   scrollToBottom();
 }
 
-// Dessine une note supplémentaire par-dessus un canvas vstaff déjà rendu
-function drawExtraNoteOnVStaff(canvas, pos, color, POSITIONS){
-  const W = canvas.width/DPR;
-  const H = canvas.height/DPR;
-  const ctx = canvas.getContext('2d');
-  // Pas de ctx.scale ici — le canvas est déjà à l'échelle DPR, on travaille en coords logiques
-  const n = POSITIONS.length;
-  const slotH = H/n;
-  const cx = W/2;
-  function posToIndex(p){ return Math.round((6-p)*2); }
-  function indexToY(idx){ return (idx+0.5)*slotH; }
-  const idx = posToIndex(pos);
-  const y = indexToY(idx);
-  const r = Math.min(slotH*0.38, W*0.18);
-  const lineCol = dk()?'#c0b0a0':'#4a3f35';
-  if(pos===0||pos===6){
-    ctx.save(); ctx.setTransform(DPR,0,0,DPR,0,0);
-    ctx.strokeStyle=lineCol; ctx.lineWidth=1;
-    ctx.beginPath(); ctx.moveTo(cx-r-6,y); ctx.lineTo(cx+r+6,y); ctx.stroke();
-    ctx.restore();
-  }
-  ctx.save(); ctx.setTransform(DPR,0,0,DPR,0,0);
-  ctx.fillStyle=color;
-  ctx.beginPath(); ctx.ellipse(cx, y, r, r*0.72, -0.2, 0, Math.PI*2); ctx.fill();
-  const up = pos<3.5;
-  ctx.strokeStyle=color; ctx.lineWidth=1.8;
-  const stemLen=slotH*2.5;
-  if(up){ ctx.beginPath(); ctx.moveTo(cx+r-1,y); ctx.lineTo(cx+r-1,y-stemLen); ctx.stroke(); }
-  else  { ctx.beginPath(); ctx.moveTo(cx-r+1,y); ctx.lineTo(cx-r+1,y+stemLen); ctx.stroke(); }
-  ctx.restore();
-}
-
-// ── GÉNÉRATION ───────────────────────────────────────────────────────────────
-
-function makeQ(){
-  const lvl=state.level;
-  if(lvl===0){
-    // Clé aléatoire : Sol ou Fa
-    const clef=Math.random()<0.5?'treble':'bass';
-    const pool=clef==='treble'?TREBLE:BASS;
-    const n=rand(pool);
-    return {type:'single',clef,notes:[n],answers:[n.label]};
-  }
-  if(lvl===1){
-    const clef=Math.random()<0.5?'treble':'bass';
-    const pool=clef==='treble'?TREBLE:BASS;
-    const count=2+Math.floor(Math.random()*2), picked=[];
-    while(picked.length<count){ const n=rand(pool); if(!picked.find(p=>p.name===n.name)) picked.push(n); }
-    picked.sort((a,b)=>a.pos-b.pos);
-    return {type:'multi',clef,notes:picked};
-  }
-  if(lvl===2){ const n=rand(TREBLE); return {type:'piano',note:n}; }
-  if(lvl===3){
-    const clef=Math.random()<0.5?'treble':'bass';
-    const pool=clef==='treble'?TREBLE:BASS;
-    const n=rand(pool); return {type:'place',targetNote:n,clef};
-  }
-  const n=rand(TREBLE); return {type:'ear',note:n};
-}
-
-// ── INTERFACE ─────────────────────────────────────────────────────────────────
-
-function buildUI(q){
-  document.getElementById('staff-container').innerHTML='';
-  document.getElementById('answer-section').innerHTML='';
-
-  if(q.type==='single'){
-    addHStaff(q.clef==='treble'?'Clé de Sol — main droite':'Clé de Fa — main gauche',
-      cv=>renderHStaff(cv,q.notes,q.clef,null));
-    addNoteGrid(document.getElementById('answer-section'),q.answers,
-      (c,g)=>resolveAnswer(c,q.answers,g,true));
-
-  } else if(q.type==='multi'){
-    addHStaff(q.clef==='treble'?'Clé de Sol — main droite':'Clé de Fa — main gauche',
-      cv=>renderHStaffChord(cv,q.notes,q.clef,null));
-    const sec=document.getElementById('answer-section');
-    q.notes.forEach((note,i)=>{
-      addSubLabel(sec,`Note ${i+1} (de bas en haut) :`);
-      addNoteGrid(sec,[note.label],(c,g)=>resolveAnswer(c,[note.label],g,i===q.notes.length-1));
-    });
-
-  } else if(q.type==='piano'){
-    addHStaff('Clé de Sol — main droite',cv=>renderHStaff(cv,[q.note],'treble',null));
-    buildPianoKeys(document.getElementById('answer-section'), q.note.label, false);
-
-  } else if(q.type==='ear'){
-    // Note de référence Do4 + bouton écouter + clavier sans labels
-    const sc=document.getElementById('staff-container');
-
-    // Référence Do
-    const refDiv=document.createElement('div');
-    refDiv.style.cssText='text-align:center;margin-bottom:10px;';
-    const refBtn=document.createElement('button');
-    refBtn.textContent='🎵 Do de référence';
-    refBtn.style.cssText='font-family:Lora,serif;font-size:13px;background:var(--bg2);color:var(--text2);border:1px solid var(--line);border-radius:20px;padding:7px 18px;cursor:pointer;touch-action:manipulation;';
-    refBtn.addEventListener('click', ()=>playNote('Do4', 0.8));
-    refDiv.appendChild(refBtn);
-    sc.appendChild(refDiv);
-
-    // Bouton écouter la note à trouver
-    const hint=document.createElement('div');
-    hint.style.cssText='text-align:center;margin-bottom:16px;';
-    const playBtn=document.createElement('button');
-    playBtn.textContent='▶ Écouter la note à trouver';
-    playBtn.style.cssText='font-family:Lora,serif;font-size:17px;font-weight:500;background:var(--accent);color:var(--bg);border:none;border-radius:32px;padding:14px 32px;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,0.18);touch-action:manipulation;';
-    playBtn.addEventListener('click', ()=>playNote(q.note.name, 1.2));
-    hint.appendChild(playBtn);
-    sc.appendChild(hint);
-    buildPianoKeys(document.getElementById('answer-section'), q.note.label, false);
-    // Jouer uniquement la note à trouver au démarrage
-    setTimeout(()=>playNote(q.note.name, 1.2), 400);
-
-  } else if(q.type==='place'){
-    buildVerticalStaff(document.getElementById('staff-container'),q);
-  }
-}
-
-function addHStaff(labelText, renderFn){
-  const c=document.getElementById('staff-container');
-  if(labelText){
-    const l=document.createElement('div'); l.className='clef-badge';
-    const isTreble = labelText.includes('Sol');
-    l.innerHTML=`<span class="clef-symbol">${isTreble?'𝄞':'𝄢'}</span> ${labelText}`;
-    c.appendChild(l);
-  }
-  const cv=document.createElement('canvas'); cv.className='staff-canvas'; c.appendChild(cv);
-  setTimeout(()=>renderFn(cv),30);
-}
-
-function addSubLabel(parent,text){
-  const d=document.createElement('div'); d.className='sub-label'; d.textContent=text; parent.appendChild(d);
-}
-
-function addNoteGrid(parent,correctAnswers,onChoose){
-  const grid=document.createElement('div'); grid.className='note-grid';
-  ALL_LABELS.forEach(l=>{
-    const btn=document.createElement('button'); btn.className='note-btn'; btn.textContent=l;
-    btn.addEventListener('touchstart',()=>{},{passive:true});
-    btn.onclick=()=>{ if(!btn.disabled) onChoose(l,grid); };
-    grid.appendChild(btn);
-  });
-  parent.appendChild(grid);
-}
-
-function resolveAnswer(chosen,correctAnswers,grid,showNext){
-  const correct=correctAnswers.includes(chosen);
-  grid.querySelectorAll('.note-btn').forEach(b=>{
-    b.disabled=true;
-    if(b.textContent===chosen) b.classList.add(correct?'correct':'wrong');
-    if(!correct&&correctAnswers.includes(b.textContent)) b.classList.add('reveal');
-  });
-  // Trouver le nom complet de la note pour la jouer
-  const notePool = state.currentQ && state.currentQ.clef==='bass' ? BASS : TREBLE;
-  const noteObj = state.currentQ ? (state.currentQ.notes||[state.currentQ.note]).find(n=>n&&n.label===chosen) : null;
-  const correctNoteObj = notePool.find(n=>correctAnswers.includes(n.label));
-  if(correct){
-    if(!state.answered){state.score+=10+state.streak*2;state.streak++;}
-    soundCorrect(noteObj?noteObj.name:(correctNoteObj?correctNoteObj.name:''));
-    showFeedback('✓ '+streakMsg());
-  } else {
-    state.streak=0;
-    soundWrong();
-    if(correctNoteObj) soundReveal(correctNoteObj.name);
-    showFeedback('La bonne note : '+correctAnswers.join(', '));
-  }
-  state.answered=true; updateScore();
-  if(showNext){ document.getElementById('next-btn').style.display='inline-block'; scrollToBottom(); }
-}
-
 // ── PIANO ─────────────────────────────────────────────────────────────────────
-
-// showLabels : affiche les noms des notes sous les touches blanches
-function buildPianoKeys(container, target, showLabels){
-  const WHITE_KEYS=[
-    {label:'Do'},{label:'Ré'},{label:'Mi'},
-    {label:'Fa'},{label:'Sol'},{label:'La'},{label:'Si'},
-    {label:'Do'},{label:'Ré'},{label:'Mi'},
-    {label:'Fa'},{label:'Sol'},{label:'La'},{label:'Si'},
-  ];
-  const BLACK_KEYS=[
-    {afterIdx:0},{afterIdx:1},{afterIdx:3},{afterIdx:4},{afterIdx:5},
-    {afterIdx:7},{afterIdx:8},{afterIdx:10},{afterIdx:11},{afterIdx:12},
-  ];
-
-  const KW=26,KH=80,BKW=17,BKH=50;
-  const totalW=WHITE_KEYS.length*KW;
+function buildPianoKeys(container,target,showLabels){
+  const WK=[{label:'Do'},{label:'Ré'},{label:'Mi'},{label:'Fa'},{label:'Sol'},{label:'La'},{label:'Si'},
+            {label:'Do'},{label:'Ré'},{label:'Mi'},{label:'Fa'},{label:'Sol'},{label:'La'},{label:'Si'}];
+  const BK=[{ai:0},{ai:1},{ai:3},{ai:4},{ai:5},{ai:7},{ai:8},{ai:10},{ai:11},{ai:12}];
+  const KW=26,KH=80,BKW=17,BKH=50, totalW=WK.length*KW;
   const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
   svg.setAttribute('viewBox',`0 0 ${totalW} ${KH}`);
   svg.style.cssText='width:100%;height:auto;display:block;border-radius:8px;';
-
-  WHITE_KEYS.forEach((key,i)=>{
+  WK.forEach((key,i)=>{
     const rect=document.createElementNS('http://www.w3.org/2000/svg','rect');
-    rect.setAttribute('x',i*KW+0.5); rect.setAttribute('y',0.5);
-    rect.setAttribute('width',KW-1); rect.setAttribute('height',KH-1);
-    rect.setAttribute('rx',3); rect.setAttribute('fill',dk()?'#e8e0d0':'white');
-    rect.setAttribute('stroke','#bbb'); rect.setAttribute('stroke-width','0.5');
-    rect.setAttribute('data-label',key.label); rect.style.cursor='pointer';
+    rect.setAttribute('x',i*KW+0.5);rect.setAttribute('y',0.5);
+    rect.setAttribute('width',KW-1);rect.setAttribute('height',KH-1);
+    rect.setAttribute('rx',3);rect.setAttribute('fill','#e8e4dc');
+    rect.setAttribute('stroke','#3a3834');rect.setAttribute('stroke-width','0.5');
+    rect.setAttribute('data-label',key.label);rect.style.cursor='pointer';
     rect.addEventListener('click',()=>handlePianoClick(key.label,target,svg));
     svg.appendChild(rect);
-
     if(showLabels){
       const txt=document.createElementNS('http://www.w3.org/2000/svg','text');
-      txt.setAttribute('x',i*KW+KW/2); txt.setAttribute('y',KH-5);
-      txt.setAttribute('text-anchor','middle'); txt.setAttribute('font-size','6.5');
-      txt.setAttribute('fill','#aaa'); txt.setAttribute('pointer-events','none');
-      txt.textContent=key.label;
-      svg.appendChild(txt);
+      txt.setAttribute('x',i*KW+KW/2);txt.setAttribute('y',KH-5);
+      txt.setAttribute('text-anchor','middle');txt.setAttribute('font-size','6.5');
+      txt.setAttribute('fill','#888');txt.setAttribute('pointer-events','none');
+      txt.textContent=key.label; svg.appendChild(txt);
     }
   });
-
-  BLACK_KEYS.forEach(bk=>{
-    const x=(bk.afterIdx+1)*KW-BKW/2;
+  BK.forEach(bk=>{
+    const x=(bk.ai+1)*KW-BKW/2;
     const rect=document.createElementNS('http://www.w3.org/2000/svg','rect');
-    rect.setAttribute('x',x); rect.setAttribute('y',0);
-    rect.setAttribute('width',BKW); rect.setAttribute('height',BKH);
-    rect.setAttribute('rx',2); rect.setAttribute('fill',dk()?'#1a1612':'#2c2c2c');
-    rect.setAttribute('stroke','#111'); rect.setAttribute('stroke-width','0.5');
+    rect.setAttribute('x',x);rect.setAttribute('y',0);
+    rect.setAttribute('width',BKW);rect.setAttribute('height',BKH);
+    rect.setAttribute('rx',2);rect.setAttribute('fill','#1c1c1e');
+    rect.setAttribute('stroke','#0a0a0a');rect.setAttribute('stroke-width','0.5');
     svg.appendChild(rect);
   });
   container.appendChild(svg);
@@ -1111,31 +556,115 @@ function handlePianoClick(clicked,target,svg){
     if(lbl===clicked) rect.setAttribute('fill',correct?'#52b788':'#e07070');
     else if(!correct&&lbl===target) rect.setAttribute('fill','#52b788');
   });
-  // Trouver le nom complet de la note (ex: Sol4) pour la jouer
-  const pianoNoteObj = TREBLE.find(n=>n.label===clicked);
-  const pianoTargetObj = TREBLE.find(n=>n.label===target);
-  if(correct){
-    state.score+=10+state.streak*2; state.streak++;
-    soundCorrect(pianoNoteObj?pianoNoteObj.name:'');
-    showFeedback('✓ '+streakMsg());
-  } else {
-    state.streak=0;
-    soundWrong();
-    if(pianoTargetObj) soundReveal(pianoTargetObj.name);
-    showFeedback(`La bonne touche est en vert !`);
-  }
+  const pN=TREBLE.find(n=>n.label===clicked);
+  const pT=TREBLE.find(n=>n.label===target);
+  if(correct){state.score+=10+state.streak*2;state.streak++;soundCorrect(pN?pN.name:'');showFeedback('✓ '+streakMsg());}
+  else{state.streak=0;soundWrong();if(pT)soundReveal(pT.name);showFeedback('La bonne touche est en vert !');}
   updateScore();
   document.getElementById('next-btn').style.display='inline-block';
   scrollToBottom();
 }
 
-// ── UTILITAIRES ───────────────────────────────────────────────────────────────
+// ── GÉNÉRATION ────────────────────────────────────────────────────────────────
+function makeQ(){
+  const lvl=state.level;
+  if(lvl===0){const clef=Math.random()<0.5?'treble':'bass';const pool=clef==='treble'?TREBLE:BASS;const n=rand(pool);return{type:'single',clef,notes:[n],answers:[n.label]};}
+  if(lvl===1){const clef=Math.random()<0.5?'treble':'bass';const pool=clef==='treble'?TREBLE:BASS;const count=2+Math.floor(Math.random()*2),picked=[];while(picked.length<count){const n=rand(pool);if(!picked.find(p=>p.name===n.name))picked.push(n);}picked.sort((a,b)=>a.pos-b.pos);return{type:'multi',clef,notes:picked};}
+  if(lvl===2){const n=rand(TREBLE);return{type:'piano',note:n};}
+  if(lvl===3){const clef=Math.random()<0.5?'treble':'bass';const pool=clef==='treble'?TREBLE:BASS;const n=rand(pool);return{type:'place',targetNote:n,clef};}
+  const n=rand(TREBLE);return{type:'ear',note:n};
+}
 
-function showFeedback(msg){ document.getElementById('feedback-text').textContent=msg; }
+// ── INTERFACE ─────────────────────────────────────────────────────────────────
+function buildUI(q){
+  document.getElementById('staff-container').innerHTML='';
+  document.getElementById('answer-section').innerHTML='';
+  if(q.type==='single'){
+    addHStaff(q.clef,cv=>renderHStaff(cv,q.notes,q.clef,null));
+    addNoteGrid(document.getElementById('answer-section'),q.answers,(c,g)=>resolveAnswer(c,q.answers,g,true));
+  } else if(q.type==='multi'){
+    addHStaff(q.clef,cv=>renderHStaffChord(cv,q.notes,q.clef,null));
+    const sec=document.getElementById('answer-section');
+    q.notes.forEach((note,i)=>{
+      addSubLabel(sec,'Note '+(i+1)+' de bas en haut');
+      addNoteGrid(sec,[note.label],(c,g)=>resolveAnswer(c,[note.label],g,i===q.notes.length-1));
+    });
+  } else if(q.type==='piano'){
+    addHStaff('treble',cv=>renderHStaff(cv,[q.note],'treble',null));
+    buildPianoKeys(document.getElementById('answer-section'),q.note.label,false);
+  } else if(q.type==='ear'){
+    const sc=document.getElementById('staff-container');
+    const refDiv=document.createElement('div');refDiv.style.cssText='text-align:center;margin-bottom:10px;';
+    const refBtn=document.createElement('button');refBtn.textContent='🎵 Do de référence';
+    refBtn.style.cssText='font-family:DM Sans,sans-serif;font-size:13px;font-weight:400;background:#242426;color:#a09a90;border:1px solid #2e2e30;border-radius:20px;padding:8px 18px;cursor:pointer;touch-action:manipulation;';
+    refBtn.addEventListener('click',()=>playNote('Do4',0.8));
+    refDiv.appendChild(refBtn); sc.appendChild(refDiv);
+    const hint=document.createElement('div');hint.style.cssText='text-align:center;margin-bottom:16px;';
+    const playBtn=document.createElement('button');playBtn.textContent='▶ Écouter la note';
+    playBtn.style.cssText='font-family:Syne,sans-serif;font-size:15px;font-weight:700;background:#e8e4dc;color:#1c1c1e;border:none;border-radius:28px;padding:14px 32px;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,0.4);touch-action:manipulation;';
+    playBtn.addEventListener('click',()=>playNote(q.note.name,1.2));
+    hint.appendChild(playBtn); sc.appendChild(hint);
+    buildPianoKeys(document.getElementById('answer-section'),q.note.label,false);
+    setTimeout(()=>playNote(q.note.name,1.2),400);
+  } else if(q.type==='place'){
+    buildVerticalStaff(document.getElementById('staff-container'),q);
+  }
+}
+
+function addHStaff(clef,renderFn){
+  const c=document.getElementById('staff-container');
+  const badge=document.createElement('div'); badge.className='clef-badge';
+  const isTreble=clef==='treble';
+  badge.innerHTML=`<span class="clef-symbol">${isTreble?'𝄞':'𝄢'}</span>${isTreble?'Clé de Sol — main droite':'Clé de Fa — main gauche'}`;
+  c.appendChild(badge);
+  const cv=document.createElement('canvas'); cv.className='staff-canvas'; c.appendChild(cv);
+  requestAnimationFrame(()=>setTimeout(()=>renderFn(cv),20));
+}
+
+function addSubLabel(parent,text){
+  const d=document.createElement('div');d.className='sub-label';d.textContent=text;parent.appendChild(d);
+}
+
+function addNoteGrid(parent,correctAnswers,onChoose){
+  const grid=document.createElement('div');grid.className='note-grid';
+  ALL_LABELS.forEach(l=>{
+    const btn=document.createElement('button');btn.className='note-btn';btn.textContent=l;
+    btn.addEventListener('touchstart',()=>{},{passive:true});
+    btn.onclick=()=>{if(!btn.disabled)onChoose(l,grid);};
+    grid.appendChild(btn);
+  });
+  parent.appendChild(grid);
+}
+
+function resolveAnswer(chosen,correctAnswers,grid,showNext){
+  const correct=correctAnswers.includes(chosen);
+  grid.querySelectorAll('.note-btn').forEach(b=>{
+    b.disabled=true;
+    if(b.textContent===chosen)b.classList.add(correct?'correct':'wrong');
+    if(!correct&&correctAnswers.includes(b.textContent))b.classList.add('reveal');
+  });
+  const notePool=state.currentQ&&state.currentQ.clef==='bass'?BASS:TREBLE;
+  const noteObj=state.currentQ?(state.currentQ.notes||[state.currentQ.note]).find(n=>n&&n.label===chosen):null;
+  const correctNoteObj=notePool.find(n=>correctAnswers.includes(n.label));
+  if(correct){
+    if(!state.answered){state.score+=10+state.streak*2;state.streak++;}
+    soundCorrect(noteObj?noteObj.name:(correctNoteObj?correctNoteObj.name:''));
+    showFeedback('✓ '+streakMsg());
+  } else {
+    state.streak=0; soundWrong();
+    if(correctNoteObj)soundReveal(correctNoteObj.name);
+    showFeedback('La bonne note : '+correctAnswers.join(', '));
+  }
+  state.answered=true; updateScore();
+  if(showNext){document.getElementById('next-btn').style.display='inline-block';scrollToBottom();}
+}
+
+// ── UTILITAIRES ───────────────────────────────────────────────────────────────
+function showFeedback(msg){document.getElementById('feedback-text').textContent=msg;}
 function streakMsg(){
-  if(state.streak > bestStreak) bestStreak = state.streak;
-  if(state.streak>=5) return '🔥 En feu ! +'+(10+state.streak*2)+'pts';
-  if(state.streak>=3) return '⭐ Belle série ! +'+(10+state.streak*2)+'pts';
+  if(state.streak>bestStreak)bestStreak=state.streak;
+  if(state.streak>=5)return '🔥 En feu ! +'+(10+state.streak*2)+'pts';
+  if(state.streak>=3)return '⭐ Belle série ! +'+(10+state.streak*2)+'pts';
   return 'Correct ! +'+(10+state.streak*2)+'pts';
 }
 function updateScore(){
@@ -1143,25 +672,56 @@ function updateScore(){
   document.getElementById('streak-display').textContent=state.streak;
   document.getElementById('progress-bar').style.width=Math.min(100,(state.score/300)*100)+'%';
 }
-function scrollToBottom(){
-  setTimeout(()=>{ const el=document.getElementById('main-scroll'); el.scrollTo({top:el.scrollHeight,behavior:'smooth'}); },80);
-}
+function scrollToBottom(){setTimeout(()=>{const el=document.getElementById('main-scroll');el.scrollTo({top:el.scrollHeight,behavior:'smooth'});},80);}
 
 function nextQuestion(){
-  state.answered=false;
-  showFeedback('');
+  state.answered=false; showFeedback('');
   document.getElementById('next-btn').style.display='none';
   document.getElementById('main-scroll').scrollTo({top:0,behavior:'instant'});
   const q=makeQ(); state.currentQ=q;
-  const labels={
-    0:'Quelle est cette note ?',
-    1:'Identifie chaque note de bas en haut',
-    2:'Trouve la note sur le clavier',
-    3:'Place la note sur la portée',
-    4:'Quelle note entends-tu ?',
-  };
+  const labels={0:'Quelle est cette note ?',1:'Identifie chaque note de bas en haut',2:'Trouve la note sur le clavier',3:'Place la note sur la portée',4:'Quelle note entends-tu ?'};
   document.getElementById('question-label').textContent=labels[state.level]||'';
   buildUI(q);
+}
+
+// ── NAVIGATION ────────────────────────────────────────────────────────────────
+function buildLevelCards(){
+  const container=document.getElementById('home-level-cards');
+  container.innerHTML='';
+  LEVEL_META.forEach((meta,i)=>{
+    const card=document.createElement('div');card.className='level-card';
+    card.innerHTML=`<div class="level-card-icon">${meta.icon}</div><div class="level-card-text"><div class="level-card-name">${meta.name}</div><div class="level-card-desc">${meta.desc}</div></div><div class="level-card-arrow">›</div>`;
+    card.onclick=()=>startApp(i);
+    container.appendChild(card);
+  });
+}
+
+function showHome(){
+  if(state.score>0)lastScore=state.score;
+  state.score=0;state.streak=0;state.total=0;state.answered=false;
+  document.getElementById('home-total-score').textContent=lastScore;
+  document.getElementById('home-best-streak').textContent=bestStreak;
+  document.getElementById('home-screen').classList.remove('hidden');
+  document.getElementById('level-screen').classList.add('hidden');
+  document.getElementById('app').style.display='none';
+  document.getElementById('home-back-btn').style.display='none';
+}
+
+function showLevelScreen(){
+  buildLevelCards();
+  document.getElementById('home-screen').classList.add('hidden');
+  document.getElementById('level-screen').classList.remove('hidden');
+  document.getElementById('app').style.display='none';
+}
+
+function startApp(lvl){
+  state.level=lvl;
+  document.getElementById('home-screen').classList.add('hidden');
+  document.getElementById('level-screen').classList.add('hidden');
+  document.getElementById('app').style.display='flex';
+  document.getElementById('home-back-btn').style.display='block';
+  document.querySelectorAll('.level-tab').forEach((t,i)=>t.classList.toggle('active',i===lvl));
+  nextQuestion();
 }
 
 function buildLevelTabs(){
@@ -1169,12 +729,12 @@ function buildLevelTabs(){
   LEVELS.forEach(lvl=>{
     const btn=document.createElement('button');
     btn.className='level-tab'+(lvl.id===state.level?' active':'');
-    btn.textContent=lvl.label; btn.title=lvl.desc;
+    btn.textContent=lvl.label;btn.title=lvl.desc;
     btn.onclick=()=>{
-      state.level=lvl.id; state.answered=false;
+      state.level=lvl.id;state.answered=false;
       document.querySelectorAll('.level-tab').forEach(t=>t.classList.remove('active'));
       btn.classList.add('active');
-      showFeedback(''); document.getElementById('next-btn').style.display='none';
+      showFeedback('');document.getElementById('next-btn').style.display='none';
       nextQuestion();
     };
     tabs.appendChild(btn);
@@ -1182,8 +742,8 @@ function buildLevelTabs(){
 }
 
 buildLevelTabs();
-document.getElementById('home-start-btn').addEventListener('click', () => showLevelScreen());
-document.getElementById('home-back-btn').addEventListener('click', () => goHome());
+document.getElementById('home-start-btn').addEventListener('click',()=>showLevelScreen());
+document.getElementById('home-back-btn').addEventListener('click',()=>showHome());
 showHome();
 </script>
 </body>
